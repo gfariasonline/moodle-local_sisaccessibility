@@ -17,26 +17,26 @@
 /**
  * Tests for eligible Moodle pages.
  *
- * @package    local_sis_accessibility
+ * @package    local_sisaccessibility
  * @copyright  2026 Thiago Serrão
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_sis_accessibility;
+namespace local_sisaccessibility;
 
-use local_sis_accessibility\local\hook_callbacks;
+use local_sisaccessibility\local\hook_callbacks;
 
 /**
  * Verify output handoff and single initialisation.
  *
- * @covers \local_sis_accessibility\local\hook_callbacks
+ * @covers \local_sisaccessibility\local\hook_callbacks
  */
 final class hook_callbacks_test extends \advanced_testcase {
     public function test_configuration_is_html_data_and_amd_receives_no_arguments(): void {
         global $PAGE;
         $this->resetAfterTest();
         $this->setGuestUser();
-        set_config('enabled', 1, 'local_sis_accessibility');
+        set_config('enabled', 1, 'local_sisaccessibility');
         $originalpage = $PAGE;
         $requires = new class {
             /** @var array Captured module initialisations. */
@@ -66,14 +66,14 @@ final class hook_callbacks_test extends \advanced_testcase {
         $renderer = $this->getMockBuilder(\renderer_base::class)->disableOriginalConstructor()
             ->onlyMethods(['render_from_template'])->getMock();
         $renderer->expects($this->once())->method('render_from_template')
-            ->with('local_sis_accessibility/widget', $this->callback(static function ($context) {
+            ->with('local_sisaccessibility/widget', $this->callback(static function ($context) {
                 $data = json_decode($context['config'], true, 512, JSON_THROW_ON_ERROR);
                 return isset($data['scope'], $data['labels']['title']);
             }))->willReturn('<div id="sis-a11y-root"></div>');
         try {
             $this->assertStringContainsString('sis-a11y-root', hook_callbacks::get_footer_html($renderer));
             $this->assertSame('', hook_callbacks::get_footer_html($renderer));
-            $this->assertSame([['local_sis_accessibility/init', 'init', []]], $requires->calls);
+            $this->assertSame([['local_sisaccessibility/init', 'init', []]], $requires->calls);
             $this->assertLessThan(1024, strlen(json_encode($requires->calls[0][2])));
         } finally {
             $PAGE = $originalpage;
@@ -82,7 +82,7 @@ final class hook_callbacks_test extends \advanced_testcase {
     public function test_nonlocal_page_url_does_not_interrupt_output_or_schedule_javascript(): void {
         global $PAGE;
         $this->resetAfterTest();
-        set_config('enabled', 1, 'local_sis_accessibility');
+        set_config('enabled', 1, 'local_sisaccessibility');
         $originalpage = $PAGE;
         $PAGE = (object) [
             'pagelayout' => 'standard', 'course' => (object) ['id' => 1],

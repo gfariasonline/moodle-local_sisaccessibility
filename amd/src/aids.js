@@ -1,7 +1,7 @@
 // This file is part of Moodle - http://moodle.org/
 // Copyright 2026 Thiago Serrão. GNU GPL v3 or later.
-/** @module local_sis_accessibility/aids */
-import {iconSelector} from 'local_sis_accessibility/sienna';
+/** @module local_sisaccessibility/aids */
+import {iconSelector} from 'local_sisaccessibility/sienna';
 
 const IMAGE_ATTR = 'data-sis-a11y-image';
 const EXCLUDE = '#sis-a11y-root,.sis-a11y-image-tip,svg,.tox,.mce-container,.editor_atto,' +

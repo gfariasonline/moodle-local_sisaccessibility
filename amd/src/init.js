@@ -1,11 +1,11 @@
 // This file is part of Moodle - http://moodle.org/
 // Copyright 2026 Thiago Serrão. GNU GPL v3 or later.
-/** @module local_sis_accessibility/init */
-import {createPreferences, normalise, colourTools} from 'local_sis_accessibility/preferences';
-import {createEffects} from 'local_sis_accessibility/effects';
-import {createAids} from 'local_sis_accessibility/aids';
-import {createIcon} from 'local_sis_accessibility/icons';
-import {profiles} from 'local_sis_accessibility/profiles';
+/** @module local_sisaccessibility/init */
+import {createPreferences, normalise, colourTools} from 'local_sisaccessibility/preferences';
+import {createEffects} from 'local_sisaccessibility/effects';
+import {createAids} from 'local_sisaccessibility/aids';
+import {createIcon} from 'local_sisaccessibility/icons';
+import {profiles} from 'local_sisaccessibility/profiles';
 
 const ICONS = {fontsize: 'font-size', bold: 'font-weight', lineheight: 'line-height', letterspacing: 'letter-spacing',
     dyslexia: 'readable-font', links: 'highlight-links', headings: 'highlight-title', monochrome: 'monochrome',

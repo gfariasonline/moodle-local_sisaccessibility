@@ -17,7 +17,7 @@
 /**
  * Language strings.
  *
- * @package    local_sis_accessibility
+ * @package    local_sisaccessibility
  * @copyright  2026 Thiago Serrão
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

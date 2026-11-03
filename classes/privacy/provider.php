@@ -17,12 +17,12 @@
 /**
  * Privacy metadata for local browser settings and transient Moodle session scope.
  *
- * @package    local_sis_accessibility
+ * @package    local_sisaccessibility
  * @copyright  2026 Thiago Serrão
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_sis_accessibility\privacy;
+namespace local_sisaccessibility\privacy;
 
 use core_privacy\local\metadata\collection;
 use core_privacy\local\metadata\provider as metadata_provider;
@@ -43,7 +43,7 @@ final class provider implements core_userlist_provider, metadata_provider, reque
      */
     public static function get_metadata(collection $collection): collection {
         $collection->add_subsystem_link('core_user', [
-            'local_sis_accessibility' => 'privacy:metadata:session:scope',
+            'local_sisaccessibility' => 'privacy:metadata:session:scope',
         ], 'privacy:metadata:session');
         $collection->add_external_location_link('browser', [
             'preferences' => 'privacy:metadata:browser:preferences',

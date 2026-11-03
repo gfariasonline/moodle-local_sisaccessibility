@@ -1,7 +1,7 @@
 /* Copyright 2026 Thiago Serrão. GNU GPL v3 or later. */
 @font-face {
     font-family: SISOpenDyslexic;
-    src: url([[font:local_sis_accessibility|OpenDyslexic-Regular.woff2]]) format('woff2');
+    src: url([[font:local_sisaccessibility|OpenDyslexic-Regular.woff2]]) format('woff2');
     font-display: swap;
 }
 #sis-a11y-root {
@@ -416,7 +416,7 @@ html.sis-a11y-guide-on #sis-a11y-root .sis-a11y-panel[open]::after {
 html.sis-a11y-cursor body,
 html.sis-a11y-cursor body *:not(#sis-a11y-root *):not(input):not(textarea):not([contenteditable]) {
     /* stylelint-disable-next-line declaration-no-important -- Must override host page styles. */
-    cursor: url([[pix:local_sis_accessibility|cursor]]) 4 2, auto !important;
+    cursor: url([[pix:local_sisaccessibility|cursor]]) 4 2, auto !important;
 }
 html.sis-a11y-animations body
 *:not(#sis-a11y-root):not(#sis-a11y-root *):not(.modal):not(.modal *):not(.tox):not(.tox *):not(.editor_atto):not(.editor_atto *) {
@@ -493,7 +493,7 @@ html.sis-a11y-animations body
         padding: 0 18px;
     }
 }
-/* local_sis_accessibility: CSS required by amd/src/aids.js (parent integrates into styles.css). */
+/* local_sisaccessibility: CSS required by amd/src/aids.js (parent integrates into styles.css). */
 
 /* hideimages: attribute set by JS; opacity keeps layout and the alt text in the accessibility tree. */
 html.sis-a11y-hideimages [data-sis-a11y-image="img"] {

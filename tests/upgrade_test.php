@@ -17,19 +17,19 @@
 /**
  * Tests for the tool-list migration used by db/upgrade.php.
  *
- * @package    local_sis_accessibility
+ * @package    local_sisaccessibility
  * @copyright  2026 Thiago Serrão
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_sis_accessibility;
+namespace local_sisaccessibility;
 
-use local_sis_accessibility\local\configuration;
+use local_sisaccessibility\local\configuration;
 
 /**
  * Only the untouched original default list may receive the new tools.
  *
- * @covers \local_sis_accessibility\local\configuration
+ * @covers \local_sisaccessibility\local\configuration
  */
 final class upgrade_test extends \advanced_testcase {
     public function test_exact_original_default_receives_new_tools(): void {

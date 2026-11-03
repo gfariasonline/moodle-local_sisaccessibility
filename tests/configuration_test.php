@@ -17,19 +17,19 @@
 /**
  * Tests for the browser configuration boundary.
  *
- * @package    local_sis_accessibility
+ * @package    local_sisaccessibility
  * @copyright  2026 Thiago Serrão
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_sis_accessibility;
+namespace local_sisaccessibility;
 
-use local_sis_accessibility\local\configuration;
+use local_sisaccessibility\local\configuration;
 
 /**
  * Verify the plugin boundary.
  *
- * @covers \local_sis_accessibility\local\configuration
+ * @covers \local_sisaccessibility\local\configuration
  */
 final class configuration_test extends \advanced_testcase {
     public function test_sanitises_arbitrary_settings(): void {

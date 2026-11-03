@@ -17,7 +17,7 @@
 /**
  * Rotate anonymous client scope across authentication changes.
  *
- * @package    local_sis_accessibility
+ * @package    local_sisaccessibility
  * @copyright  2026 Thiago Serrão
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -27,10 +27,10 @@ defined('MOODLE_INTERNAL') || die();
 $observers = [
     [
         'eventname' => '\\core\\event\\user_loggedin',
-        'callback' => '\\local_sis_accessibility\\local\\configuration::reset_scope',
+        'callback' => '\\local_sisaccessibility\\local\\configuration::reset_scope',
     ],
     [
         'eventname' => '\\core\\event\\user_loggedout',
-        'callback' => '\\local_sis_accessibility\\local\\configuration::reset_scope',
+        'callback' => '\\local_sisaccessibility\\local\\configuration::reset_scope',
     ],
 ];

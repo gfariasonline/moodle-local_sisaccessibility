@@ -7,9 +7,9 @@ test('footer uses the supplied local SIS logo and a safe GFARIAS link', () => {
     globalThis.document = dom.window.document;
     globalThis.window = dom.window;
     const widget = init({tools: ['bold'], labels: {}, scope: 'test',
-        logourl: 'https://example.test/moodle/local/sis_accessibility/pix/sis-logo.png'});
+        logourl: 'https://example.test/moodle/local/sisaccessibility/pix/sis-logo.png'});
     const logo = document.querySelector('.sis-a11y-brand-logo');
-    assert.equal(logo.src, 'https://example.test/moodle/local/sis_accessibility/pix/sis-logo.png');
+    assert.equal(logo.src, 'https://example.test/moodle/local/sisaccessibility/pix/sis-logo.png');
     assert.equal(logo.alt, 'SIS Accessibility');
     assert.equal(logo.width, 300);
     assert.equal(logo.height, 181);
@@ -27,7 +27,7 @@ test('initialization is unique; buttons update state, reset clears effects', () 
     globalThis.window = dom.window;
     const config = {tools: ['bold', 'fontsize'], labels: {open: 'Open', close: 'Close', reset: 'Reset', title: 'Accessibility',
         bold: 'Bold', fontsize: 'Text size', increase: 'Increase', decrease: 'Decrease', status: 'Text size'}, persist: true,
-        scope: 'local_sis_accessibility:v1:test:session', position: 'bottom-left', mobileposition: 'bottom-left'};
+        scope: 'local_sisaccessibility:v1:test:session', position: 'bottom-left', mobileposition: 'bottom-left'};
     const widget = init(config);
     assert.equal(init(config), widget);
     assert.equal(document.querySelectorAll('#sis-a11y-panel').length, 1);

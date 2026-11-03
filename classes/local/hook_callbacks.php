@@ -17,12 +17,12 @@
 /**
  * Footer hook integration.
  *
- * @package    local_sis_accessibility
+ * @package    local_sisaccessibility
  * @copyright  2026 Thiago Serrão
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_sis_accessibility\local;
+namespace local_sisaccessibility\local;
 
 use core\hook\output\before_footer_html_generation;
 
@@ -55,7 +55,7 @@ final class hook_callbacks {
      */
     public static function get_footer_html(\renderer_base $renderer): string {
         global $CFG, $PAGE;
-        $config = configuration::normalise(get_config('local_sis_accessibility'));
+        $config = configuration::normalise(get_config('local_sisaccessibility'));
         try {
             $path = $PAGE->url->out_as_local_url(false);
         } catch (\coding_exception $exception) {
@@ -78,10 +78,10 @@ final class hook_callbacks {
             return '';
         }
         $html = $renderer->render_from_template(
-            'local_sis_accessibility/widget',
+            'local_sisaccessibility/widget',
             configuration::template_context($config)
         );
-        $PAGE->requires->js_call_amd('local_sis_accessibility/init', 'init');
+        $PAGE->requires->js_call_amd('local_sisaccessibility/init', 'init');
         self::$rendered[$PAGE] = true;
         return $html;
     }

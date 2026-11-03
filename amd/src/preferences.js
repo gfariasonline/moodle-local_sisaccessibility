@@ -1,10 +1,10 @@
 // This file is part of Moodle - http://moodle.org/
 // Copyright 2026 Thiago Serrão. GNU GPL v3 or later.
-/** @module local_sis_accessibility/preferences */
+/** @module local_sisaccessibility/preferences */
 const COLOURS = ['monochrome', 'lowsaturation', 'highsaturation', 'highcontrast', 'lightcontrast', 'darkcontrast'];
 const TOOLS = ['fontsize', 'bold', 'lineheight', 'letterspacing', 'dyslexia', 'links', 'headings', ...COLOURS,
     'cursor', 'guide', 'animations', 'hideimages', 'imagetooltips'];
-const PREFIX = 'local_sis_accessibility:v1:';
+const PREFIX = 'local_sisaccessibility:v1:';
 const RETENTION = 90 * 24 * 60 * 60 * 1000;
 
 /**

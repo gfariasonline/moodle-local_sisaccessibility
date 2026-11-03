@@ -11,10 +11,10 @@ test('reset removes active key; blocked and corrupt storage degrade safely', () 
     const data = new Map();
     const storage = {getItem: key => data.get(key), setItem: (k, v) => data.set(k, v), removeItem: k => data.delete(k),
         key: index => [...data.keys()][index], get length() { return data.size; }};
-    const prefs = createPreferences('local_sis_accessibility:v1:one:session', ['bold'], true, storage);
+    const prefs = createPreferences('local_sisaccessibility:v1:one:session', ['bold'], true, storage);
     prefs.save({bold: true});
     assert.deepEqual(prefs.load(), {bold: true});
-    assert.deepEqual(createPreferences('local_sis_accessibility:v1:two:session', ['bold'], true, storage).load(), {});
+    assert.deepEqual(createPreferences('local_sisaccessibility:v1:two:session', ['bold'], true, storage).load(), {});
     prefs.reset();
     assert.equal(data.size, 0);
     storage.getItem = () => '{';

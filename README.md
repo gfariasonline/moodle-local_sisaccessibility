@@ -1,4 +1,4 @@
-# SIS Accessibility (local_sis_accessibility)
+# SIS Accessibility (local_sisaccessibility)
 
 SIS Accessibility adds a locally hosted accessibility toolbar to standard Moodle web pages.
 Developed by **Thiago Serrão** for [GFARIAS](https://gfarias.com), it provides display and
@@ -42,17 +42,17 @@ above the footer with the SIS logo and the GFARIAS website link.
 Back up the site and test the plugin before installing it in production.
 
 1. Download the plugin ZIP and use **Site administration > Plugins > Install plugins**,
-   or extract its `sis_accessibility` directory into `local/` beneath Moodle's effective
+   or extract its `sisaccessibility` directory into `local/` beneath Moodle's effective
    web root. On installations using a `public/` web root, the destination is
-   `public/local/sis_accessibility`.
+   `public/local/sisaccessibility`.
 2. Alternatively, clone the repository into that same destination:
 
    ```sh
-   git clone https://github.com/gfariasonline/moodle-local_sis_accessibility.git local/sis_accessibility
+   git clone https://github.com/gfariasonline/moodle-local_sisaccessibility.git local/sisaccessibility
    ```
 
    Run this command from the effective web root; the final directory must be named
-   `sis_accessibility`.
+   `sisaccessibility`.
 3. Complete the installation through **Site administration > Notifications**, or run the
    following commands from the Moodle application root containing `admin/cli/`:
 
@@ -112,7 +112,7 @@ Browser preference cleanup remains a local browser operation as described above.
 
 ## Support and licence
 
-Report reproducible problems through the [GitHub issue tracker](https://github.com/gfariasonline/moodle-local_sis_accessibility/issues),
+Report reproducible problems through the [GitHub issue tracker](https://github.com/gfariasonline/moodle-local_sisaccessibility/issues),
 including Moodle, PHP, theme and browser versions, reproduction steps and relevant errors.
 Do not include passwords or personal data. Maintainer: **Thiago Serrão**, [GFARIAS](https://gfarias.com).
 

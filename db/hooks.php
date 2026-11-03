@@ -17,7 +17,7 @@
 /**
  * Moodle output hook registration.
  *
- * @package    local_sis_accessibility
+ * @package    local_sisaccessibility
  * @copyright  2026 Thiago Serrão
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -27,6 +27,6 @@ defined('MOODLE_INTERNAL') || die();
 $callbacks = [
     [
         'hook' => \core\hook\output\before_footer_html_generation::class,
-        'callback' => [\local_sis_accessibility\local\hook_callbacks::class, 'before_footer_html_generation'],
+        'callback' => [\local_sisaccessibility\local\hook_callbacks::class, 'before_footer_html_generation'],
     ],
 ];

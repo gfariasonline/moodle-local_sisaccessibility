@@ -17,12 +17,12 @@
 /**
  * Validated settings and anonymous browser scope.
  *
- * @package    local_sis_accessibility
+ * @package    local_sisaccessibility
  * @copyright  2026 Thiago Serrão
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_sis_accessibility\local;
+namespace local_sisaccessibility\local;
 
 /**
  * Settings boundary; no administrator-provided CSS or URLs reach the browser.
@@ -167,15 +167,15 @@ final class configuration {
     public static function storage_scope(): string {
         global $CFG, $SESSION, $USER;
         $owner = empty($USER->id) ? 'visitor' : (isguestuser() ? 'guest' : 'user:' . (int) $USER->id);
-        $scope = $SESSION->local_sis_accessibility ?? null;
+        $scope = $SESSION->local_sisaccessibility ?? null;
         if (
             !is_array($scope) || ($scope['owner'] ?? '') !== $owner ||
                 !preg_match('/^[a-f0-9]{32}$/D', $scope['nonce'] ?? '')
         ) {
             $scope = ['owner' => $owner, 'nonce' => bin2hex(random_bytes(16))];
-            $SESSION->local_sis_accessibility = $scope;
+            $SESSION->local_sisaccessibility = $scope;
         }
-        return 'local_sis_accessibility:v1:' . substr(hash('sha256', $CFG->wwwroot), 0, 16) . ':' . $scope['nonce'];
+        return 'local_sisaccessibility:v1:' . substr(hash('sha256', $CFG->wwwroot), 0, 16) . ':' . $scope['nonce'];
     }
 
     /**
@@ -183,7 +183,7 @@ final class configuration {
      */
     public static function reset_scope(): void {
         global $SESSION;
-        unset($SESSION->local_sis_accessibility);
+        unset($SESSION->local_sisaccessibility);
     }
 
     /**
@@ -198,10 +198,10 @@ final class configuration {
         $config['scope'] = self::storage_scope();
         $config['language'] = current_language();
         $config['languages'] = self::installed_languages($config['language']);
-        $config['logourl'] = (new \moodle_url('/local/sis_accessibility/pix/sis-logo.png'))->out(false);
+        $config['logourl'] = (new \moodle_url('/local/sisaccessibility/pix/sis-logo.png'))->out(false);
         $config['labels'] = [];
         foreach (array_merge(self::TOOLS, self::LABELS) as $name) {
-            $config['labels'][$name] = get_string($name, 'local_sis_accessibility');
+            $config['labels'][$name] = get_string($name, 'local_sisaccessibility');
         }
         return $config;
     }

@@ -17,12 +17,12 @@
 /**
  * Bounded integer setting validation.
  *
- * @package    local_sis_accessibility
+ * @package    local_sisaccessibility
  * @copyright  2026 Thiago Serrão
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_sis_accessibility\local;
+namespace local_sisaccessibility\local;
 
 /**
  * Native setting with strict pixel limits.
@@ -58,7 +58,7 @@ final class bounded_int_setting extends \admin_setting_configtext {
         if ($value === false || $value < $this->minimum || $value > $this->maximum) {
             return get_string(
                 'invalidnumber',
-                'local_sis_accessibility',
+                'local_sisaccessibility',
                 (object) ['min' => $this->minimum, 'max' => $this->maximum]
             );
         }

@@ -17,7 +17,7 @@
 /**
  * Upgrade steps.
  *
- * @package    local_sis_accessibility
+ * @package    local_sisaccessibility
  * @copyright  2026 Thiago Serrão
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -28,16 +28,16 @@
  * @param int $oldversion Previously installed version
  * @return bool Always true
  */
-function xmldb_local_sis_accessibility_upgrade(int $oldversion): bool {
+function xmldb_local_sisaccessibility_upgrade(int $oldversion): bool {
     if ($oldversion < 2026101601) {
         // Enable the tools added after the first release only where the administrator never customised the list.
-        $migrated = \local_sis_accessibility\local\configuration::migrate_tools(
-            get_config('local_sis_accessibility', 'tools')
+        $migrated = \local_sisaccessibility\local\configuration::migrate_tools(
+            get_config('local_sisaccessibility', 'tools')
         );
         if ($migrated !== null) {
-            set_config('tools', $migrated, 'local_sis_accessibility');
+            set_config('tools', $migrated, 'local_sisaccessibility');
         }
-        upgrade_plugin_savepoint(true, 2026101601, 'local', 'sis_accessibility');
+        upgrade_plugin_savepoint(true, 2026101601, 'local', 'sisaccessibility');
     }
     return true;
 }

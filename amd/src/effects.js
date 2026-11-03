@@ -1,8 +1,8 @@
 // This file is part of Moodle - http://moodle.org/
 // Copyright 2026 Thiago Serrão. GNU GPL v3 or later.
-/** @module local_sis_accessibility/effects */
+/** @module local_sisaccessibility/effects */
 import {textSelector, iconSelector, textStyles, highlightStyles, filters, contrastStyles}
-    from 'local_sis_accessibility/sienna';
+    from 'local_sisaccessibility/sienna';
 
 // Every sis-a11y UI node (root, guide, structure panel, aids). html carries state classes, so it and body are not UI.
 const WIDGET = '[id^="sis-a11y"],:not(html):not(body)[class*="sis-a11y"]';

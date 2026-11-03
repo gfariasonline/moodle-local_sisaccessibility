@@ -123,16 +123,16 @@ jobs:
           # shellcheck source=/dev/null
           . "$NVM_DIR/nvm.sh"
           nvm use
-          plugin_path=local/sis_accessibility
-          if [ -d public/local/sis_accessibility ]; then
-            plugin_path=public/local/sis_accessibility
+          plugin_path=local/sisaccessibility
+          if [ -d public/local/sisaccessibility ]; then
+            plugin_path=public/local/sisaccessibility
           fi
           npx grunt eslint:amd stylelint:css gherkinlint --root="$plugin_path" --max-lint-warnings=0
       - name: Mustache templates
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         # The mustache linter requires the plugin path to live inside the Moodle tree.
         run: |
-          target=$(find moodle -maxdepth 3 -path '*/local/sis_accessibility' \( -type l -o -type d \) | head -n 1)
+          target=$(find moodle -maxdepth 3 -path '*/local/sisaccessibility' \( -type l -o -type d \) | head -n 1)
           test -n "$target"
           if [ -L "$target" ]; then
             rm "$target"

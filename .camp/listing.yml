@@ -20,6 +20,6 @@ description: |
 labels:
   - fully-free
 links:
-  docs: https://github.com/gfariasonline/moodle-local_sis_accessibility#readme
-  issues: https://github.com/gfariasonline/moodle-local_sis_accessibility/issues
-  changelog: https://github.com/gfariasonline/moodle-local_sis_accessibility/blob/main/CHANGES.md
+  docs: https://github.com/gfariasonline/moodle-local_sisaccessibility#readme
+  issues: https://github.com/gfariasonline/moodle-local_sisaccessibility/issues
+  changelog: https://github.com/gfariasonline/moodle-local_sisaccessibility/blob/main/CHANGES.md

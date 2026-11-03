@@ -1,4 +1,4 @@
-@local @local_sis_accessibility @javascript
+@local @local_sisaccessibility @javascript
 Feature: Use the SIS Accessibility panel
   In order to adjust the presentation of course content
   As a visitor
@@ -17,12 +17,12 @@ Feature: Use the SIS Accessibility panel
 
   Scenario: Disabled plugin does not render an accessibility panel
     Given the following config values are set as admin:
-      | enabled | 0 | local_sis_accessibility |
+      | enabled | 0 | local_sisaccessibility |
     When I am on homepage
     Then "#sis-a11y-root" "css_element" should not exist
 
   Scenario: Empty tool selection hides the panel
     Given the following config values are set as admin:
-      | tools | | local_sis_accessibility |
+      | tools | | local_sisaccessibility |
     When I am on homepage
     Then "#sis-a11y-root" "css_element" should not exist

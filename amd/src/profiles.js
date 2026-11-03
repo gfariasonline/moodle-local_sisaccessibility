@@ -1,5 +1,5 @@
 // Copyright 2026 Thiago Serrão. GNU GPL v3 or later.
-/** @module local_sis_accessibility/profiles */
+/** @module local_sisaccessibility/profiles */
 // Functional presets independently implemented using the plugin's local tools.
 export const profiles = [
     {id: 'seizure-safe', label: 'profile_seizure_safe', state: {animations: true, lowsaturation: true}},

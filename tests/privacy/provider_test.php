@@ -17,23 +17,23 @@
 /**
  * Tests for the declared privacy metadata.
  *
- * @package    local_sis_accessibility
+ * @package    local_sisaccessibility
  * @copyright  2026 Thiago Serrão
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_sis_accessibility\privacy;
+namespace local_sisaccessibility\privacy;
 
 use core_privacy\local\metadata\collection;
 
 /**
  * Verify the plugin boundary.
  *
- * @covers \local_sis_accessibility\privacy\provider
+ * @covers \local_sisaccessibility\privacy\provider
  */
 final class provider_test extends \advanced_testcase {
     public function test_documents_browser_and_core_session_storage(): void {
-        $metadata = provider::get_metadata(new collection('local_sis_accessibility'))->get_collection();
+        $metadata = provider::get_metadata(new collection('local_sisaccessibility'))->get_collection();
         $this->assertCount(2, $metadata);
         $names = array_map(static fn($item) => $item->get_name(), $metadata);
         $this->assertContains('core_user', $names);
@@ -41,7 +41,7 @@ final class provider_test extends \advanced_testcase {
     }
     public function test_is_compliant_with_real_privacy_manager(): void {
         $manager = new \core_privacy\manager();
-        $this->assertTrue($manager->component_is_compliant('local_sis_accessibility'));
+        $this->assertTrue($manager->component_is_compliant('local_sisaccessibility'));
         $this->assertTrue(is_subclass_of(provider::class, \core_privacy\local\request\plugin\provider::class));
         $this->assertTrue(is_subclass_of(provider::class, \core_privacy\local\request\core_userlist_provider::class));
     }

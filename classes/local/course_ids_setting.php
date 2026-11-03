@@ -17,12 +17,12 @@
 /**
  * Strict course exclusion setting validation.
  *
- * @package    local_sis_accessibility
+ * @package    local_sisaccessibility
  * @copyright  2026 Thiago Serrão
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_sis_accessibility\local;
+namespace local_sisaccessibility\local;
 
 /**
  * Validate the entire list before Moodle persists administrator input.
@@ -38,7 +38,7 @@ final class course_ids_setting extends \admin_setting_configtext {
             configuration::course_ids((string) $data);
             return true;
         } catch (\invalid_parameter_exception $exception) {
-            return get_string('invalidcourses', 'local_sis_accessibility');
+            return get_string('invalidcourses', 'local_sisaccessibility');
         }
     }
 }

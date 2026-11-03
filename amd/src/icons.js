@@ -1,6 +1,6 @@
 // Generated from locally licensed SVG files.
 // Sienna MIT, Material Apache2.0, Lucide ISC/Feather MIT. See thirdparty licenses.
-/** @module local_sis_accessibility/icons */
+/** @module local_sisaccessibility/icons */
 const icons = {
     "font-weight": {
         "viewBox": "0 0 24 24",

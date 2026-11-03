@@ -17,12 +17,12 @@
 /**
  * Explicit HTML page eligibility policy.
  *
- * @package    local_sis_accessibility
+ * @package    local_sisaccessibility
  * @copyright  2026 Thiago Serrão
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_sis_accessibility\local;
+namespace local_sisaccessibility\local;
 
 /**
  * Pure page policy, separate from Moodle output and session creation.

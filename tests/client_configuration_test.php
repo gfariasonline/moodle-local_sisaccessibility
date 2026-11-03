@@ -17,19 +17,19 @@
 /**
  * Tests for the browser configuration boundary.
  *
- * @package    local_sis_accessibility
+ * @package    local_sisaccessibility
  * @copyright  2026 Thiago Serrão
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_sis_accessibility;
+namespace local_sisaccessibility;
 
-use local_sis_accessibility\local\configuration;
+use local_sisaccessibility\local\configuration;
 
 /**
  * Verify the plugin boundary.
  *
- * @covers \local_sis_accessibility\local\configuration
+ * @covers \local_sisaccessibility\local\configuration
  */
 final class client_configuration_test extends \advanced_testcase {
     public function test_scope_is_stable_and_rotates_for_account_changes(): void {
@@ -43,7 +43,7 @@ final class client_configuration_test extends \advanced_testcase {
         $this->assertSame($user, configuration::storage_scope());
         configuration::reset_scope();
         $this->assertNotSame($user, configuration::storage_scope());
-        $this->assertMatchesRegularExpression('/^local_sis_accessibility:v1:[a-f0-9]{16}:[a-f0-9]{32}$/', $user);
+        $this->assertMatchesRegularExpression('/^local_sisaccessibility:v1:[a-f0-9]{16}:[a-f0-9]{32}$/', $user);
     }
 
     public function test_client_payload_contains_only_public_values(): void {
@@ -54,7 +54,7 @@ final class client_configuration_test extends \advanced_testcase {
             $this->assertArrayNotHasKey($privatekey, $config);
         }
         $this->assertArrayNotHasKey('fonturl', $config);
-        $this->assertSame((new \moodle_url('/local/sis_accessibility/pix/sis-logo.png'))->out(false), $config['logourl']);
+        $this->assertSame((new \moodle_url('/local/sisaccessibility/pix/sis-logo.png'))->out(false), $config['logourl']);
         $this->assertCount(count(configuration::TOOLS) + count(configuration::LABELS), $config['labels']);
     }
 

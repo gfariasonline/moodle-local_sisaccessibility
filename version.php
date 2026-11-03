@@ -17,14 +17,14 @@
 /**
  * Plugin metadata.
  *
- * @package    local_sis_accessibility
+ * @package    local_sisaccessibility
  * @copyright  2026 Thiago Serrão
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'local_sis_accessibility';
+$plugin->component = 'local_sisaccessibility';
 $plugin->version = 2026101601;
 $plugin->requires = 2024100700; // Moodle 4.5; the full 4.5–5.3 validation matrix is pending.
 $plugin->maturity = MATURITY_ALPHA;

@@ -17,14 +17,14 @@
 /**
  * Tests for translation completeness.
  *
- * @package    local_sis_accessibility
+ * @package    local_sisaccessibility
  * @copyright  2026 Thiago Serrão
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_sis_accessibility;
+namespace local_sisaccessibility;
 
-use local_sis_accessibility\local\configuration;
+use local_sisaccessibility\local\configuration;
 
 /**
  * English and Brazilian Portuguese must cover every string used by the widget.
@@ -39,7 +39,7 @@ final class lang_test extends \advanced_testcase {
      */
     private static function strings(string $code): array {
         $string = [];
-        include(dirname(__DIR__) . '/lang/' . $code . '/local_sis_accessibility.php');
+        include(dirname(__DIR__) . '/lang/' . $code . '/local_sisaccessibility.php');
         return $string;
     }
 
