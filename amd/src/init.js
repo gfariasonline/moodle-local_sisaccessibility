@@ -65,7 +65,7 @@ export const init = config => {
     const icon = key => createIcon(doc, key);
     const integer = (value, fallback, low, high) => Math.max(low, Math.min(high, Number.isFinite(+value) ? +value : fallback));
     const positions = ['center-left', 'center-right', 'bottom-left', 'bottom-right', 'top-left', 'top-right'];
-    const position = value => positions.includes(value) ? value : 'center-left';
+    const position = value => positions.includes(value) ? value : 'center-right';
     root.dataset.position = position(config.position);
     root.dataset.mobileposition = position(config.mobileposition);
     ['size', 'mobilesize'].forEach(key => root.style.setProperty(`--sis-${key}`, `${integer(config[key], 56, 48, 96)}px`));

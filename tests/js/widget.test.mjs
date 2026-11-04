@@ -136,8 +136,8 @@ test('unknown placement falls back to centre-left and sienna blue defaults', () 
     globalThis.window = dom.window;
     const widget = init({tools: ['bold'], labels: {}, persist: false, scope: 'test', position: 'centre', mobileposition: 'top'});
     const root = document.getElementById('sis-a11y-root');
-    assert.equal(root.dataset.position, 'center-left');
-    assert.equal(root.dataset.mobileposition, 'center-left');
+    assert.equal(root.dataset.position, 'center-right');
+    assert.equal(root.dataset.mobileposition, 'center-right');
     assert.equal(root.style.getPropertyValue('--sis-colour'), '#0848ca');
     assert.equal(root.style.getPropertyValue('--sis-textcolour'), '#ffffff');
     widget.destroy();

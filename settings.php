@@ -63,7 +63,7 @@ if ($hassiteconfig) {
                 'local_sisaccessibility/' . $name,
                 get_string($name, 'local_sisaccessibility'),
                 '',
-                'center-left',
+                'center-right',
                 $positions
             ));
         }

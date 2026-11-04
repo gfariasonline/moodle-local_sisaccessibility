@@ -69,7 +69,7 @@ final class configuration {
         $selected = isset($raw->tools) && is_string($raw->tools) ? explode(',', $raw->tools) : self::TOOLS;
         $result['tools'] = array_values(array_intersect(self::TOOLS, array_map('trim', $selected)));
         foreach (['position', 'mobileposition'] as $name) {
-            $result[$name] = in_array($raw->$name ?? '', self::POSITIONS, true) ? $raw->$name : 'center-left';
+            $result[$name] = in_array($raw->$name ?? '', self::POSITIONS, true) ? $raw->$name : 'center-right';
         }
         $result += self::dimensions($raw);
         $result += self::colours($raw);

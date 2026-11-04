@@ -39,7 +39,7 @@ final class configuration_test extends \advanced_testcase {
         ]);
         $this->assertSame(['fontsize', 'links'], $config['tools']);
         $this->assertSame('#0848CA', $config['colour']);
-        $this->assertSame('center-left', $config['position']);
+        $this->assertSame('center-right', $config['position']);
         $this->assertSame(96, $config['size']);
         $this->assertSame(0, $config['offsetx']);
     }
@@ -52,16 +52,16 @@ final class configuration_test extends \advanced_testcase {
 
     public function test_centre_and_corner_positions_are_accepted_with_centre_left_default(): void {
         $defaults = configuration::normalise(new \stdClass());
-        $this->assertSame('center-left', $defaults['position']);
-        $this->assertSame('center-left', $defaults['mobileposition']);
+        $this->assertSame('center-right', $defaults['position']);
+        $this->assertSame('center-right', $defaults['mobileposition']);
         foreach (['center-left', 'center-right', 'bottom-left', 'bottom-right', 'top-left', 'top-right'] as $position) {
             $config = configuration::normalise((object) ['position' => $position, 'mobileposition' => $position]);
             $this->assertSame($position, $config['position']);
             $this->assertSame($position, $config['mobileposition']);
         }
         $invalid = configuration::normalise((object) ['position' => 'center', 'mobileposition' => 'top']);
-        $this->assertSame('center-left', $invalid['position']);
-        $this->assertSame('center-left', $invalid['mobileposition']);
+        $this->assertSame('center-right', $invalid['position']);
+        $this->assertSame('center-right', $invalid['mobileposition']);
     }
 
     public function test_empty_tool_selection_stays_empty(): void {
