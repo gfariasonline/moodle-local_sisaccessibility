@@ -8,6 +8,20 @@
     <licenseversion></licenseversion>
   </library>
   <library>
+    <location>amd/src/sienna.js</location>
+    <name>Sienna Accessibility Widget (adapted tool definitions, AMD source)</name>
+    <version>2.0.1-e574c32</version>
+    <license>MIT</license>
+    <licenseversion></licenseversion>
+  </library>
+  <library>
+    <location>amd/build/sienna.min.js</location>
+    <name>Sienna Accessibility Widget (adapted tool definitions, AMD build)</name>
+    <version>2.0.1-e574c32</version>
+    <license>MIT</license>
+    <licenseversion></licenseversion>
+  </library>
+  <library>
     <location>fonts</location>
     <name>OpenDyslexic Regular</name>
     <version>1824da5c0e41dc3e13ffc7f3a636dcaf695d61b7</version>

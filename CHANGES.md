@@ -1,3 +1,13 @@
+# 1.0.0 — 2026-11-06
+
+- Primeira versão estável.
+- Componente renomeado de `local_sis_accessibility` para `local_sisaccessibility`
+  (pasta `local/sisaccessibility`). **Não há migração**: configurações, preferências
+  salvas no navegador e o registro do componente antigo não são aproveitados.
+  Desinstale o plugin antigo e reconfigure o novo.
+- Posição padrão do botão alterada para centro-direita (desktop e celular).
+- O logo SIS/GFARIAS (`pix/sis-logo.png`) é de titularidade de GFARIAS, todos os direitos reservados.
+
 # 0.2.0-dev — 2026-10-16
 
 - Logo SIS local no rodapé, com altura de 44 px e contraste escuro por CSS;

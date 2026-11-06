@@ -7,7 +7,7 @@ No CDN, third-party API, telemetry or external asset download is required.
 
 ## Requirements and status
 
-- **Release:** 0.2.0-dev, alpha (`2026101601`). Use a test environment before deployment.
+- **Release:** 1.0.0, stable (`2026110601`).
 - **Minimum Moodle:** 4.5 (`2024100700`). The intended range is Moodle 4.5–5.3;
   the complete installation and integration test matrix is still pending.
 - **PHP:** use the PHP version and extensions required by your Moodle release.

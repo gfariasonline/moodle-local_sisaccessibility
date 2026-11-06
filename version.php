@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_sisaccessibility';
-$plugin->version = 2026101601;
-$plugin->requires = 2024100700; // Moodle 4.5; the full 4.5–5.3 validation matrix is pending.
-$plugin->maturity = MATURITY_ALPHA;
-$plugin->release = '0.2.0-dev';
+$plugin->version = 2026110601;
+$plugin->requires = 2024100700;  // Moodle 4.5.
+$plugin->maturity = MATURITY_STABLE;
+$plugin->release = '1.0.0';
