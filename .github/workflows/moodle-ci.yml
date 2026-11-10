@@ -127,7 +127,11 @@ jobs:
           if [ -d public/local/sisaccessibility ]; then
             plugin_path=public/local/sisaccessibility
           fi
-          npx grunt eslint:amd stylelint:css gherkinlint --root="$plugin_path" --max-lint-warnings=0
+          # amd/src/sienna.js is registered in thirdpartylibs.xml, so Moodle's ESLint
+          # config ignores it and reports exactly one "file ignored" warning for it.
+          # That is the only warning tolerated; any other one still fails the job.
+          npx grunt eslint:amd --root="$plugin_path" --max-lint-warnings=1
+          npx grunt stylelint:css gherkinlint --root="$plugin_path" --max-lint-warnings=0
       - name: Mustache templates
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         # The mustache linter requires the plugin path to live inside the Moodle tree.
