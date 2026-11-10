@@ -6,22 +6,39 @@ import {createEffects} from 'local_sisaccessibility/effects';
 import {createAids} from 'local_sisaccessibility/aids';
 import {createIcon} from 'local_sisaccessibility/icons';
 import {profiles} from 'local_sisaccessibility/profiles';
+import {colourVisionTools, readMatrix} from 'local_sisaccessibility/colourvision';
 
 const ICONS = {fontsize: 'font-size', bold: 'font-weight', lineheight: 'line-height', letterspacing: 'letter-spacing',
     dyslexia: 'readable-font', links: 'highlight-links', headings: 'highlight-title', monochrome: 'monochrome',
     lowsaturation: 'low-saturation', highsaturation: 'high-saturation', highcontrast: 'high-contrast',
     lightcontrast: 'light-contrast', darkcontrast: 'dark-contrast', cursor: 'big-cursor', guide: 'readable-guide',
-    animations: 'stop-animations', hideimages: 'hide-images', imagetooltips: 'image-tooltips'};
+    animations: 'stop-animations', hideimages: 'hide-images', imagetooltips: 'image-tooltips',
+    protanopia: 'colour-vision', deuteranopia: 'colour-vision', tritanopia: 'colour-vision',
+    pausemedia: 'pause-media', silencemedia: 'silence-media'};
 const GROUPS = [
     {id: 'content', label: 'contentgroup', tools: ['fontsize', 'bold', 'lineheight', 'letterspacing',
         'dyslexia', 'links', 'headings']},
     {id: 'visual', label: 'visualgroup', tools: ['guide', 'cursor']},
     {id: 'colour', label: 'colourgroup', tools: colourTools},
-    {id: 'tools', label: 'toolsgroup', tools: ['animations', 'hideimages', 'imagetooltips']},
+    {id: 'tools', label: 'toolsgroup', tools: ['animations', 'pausemedia', 'silencemedia', 'hideimages', 'imagetooltips']},
 ];
 
 const availableLanguages = config => config.languages || {
     [config.language || 'en']: config.labels['language_' + (config.language || 'en')] || config.language || 'English'
+};
+
+/**
+ * Drop the first-paint approximation set by the early snippet. It must happen before the exact adjustments are measured
+ * and applied (the approximation changes computed sizes and backgrounds), and whatever else happens afterwards.
+ * @param {Document} doc
+ */
+const clearFirstPaint = doc => {
+    const html = doc.documentElement;
+    [...html.classList].filter(name => name.startsWith('sis-a11y-pre')).forEach(name => html.classList.remove(name));
+    html.style.removeProperty('--sis-pre-fontsize');
+    if (html.hasAttribute('style') && !html.getAttribute('style')) {
+        html.removeAttribute('style');
+    }
 };
 
 /**
@@ -30,6 +47,7 @@ const availableLanguages = config => config.languages || {
  */
 export const init = config => {
     const doc = document;
+    clearFirstPaint(doc);
     const root = doc.getElementById('sis-a11y-root');
     if (!root) {
         return null;
@@ -45,6 +63,11 @@ export const init = config => {
         }
     }
     if (!Array.isArray(config?.tools) || !config.tools.length || !config.labels) {
+        return null;
+    }
+    // A colour-vision filter works only if the page defines it; a switch that does nothing would only mislead.
+    const enabled = config.tools.filter(tool => !colourVisionTools.includes(tool) || readMatrix(doc, tool));
+    if (!enabled.length) {
         return null;
     }
     // A footer hook may render inside a theme container; keep the widget outside page effects.
@@ -78,6 +101,11 @@ export const init = config => {
     launcher.setAttribute('aria-haspopup', 'dialog');
     launcher.setAttribute('aria-expanded', 'false');
     launcher.setAttribute('aria-controls', 'sis-a11y-panel');
+    const shortcut = config.shortcut !== false;
+    if (shortcut) {
+        launcher.setAttribute('aria-keyshortcuts', 'Alt+A');
+        launcher.title = label('shortcut_hint');
+    }
     launcher.append(icon('launcher'));
     const panel = make('dialog', '', 'sis-a11y-panel');
     panel.id = 'sis-a11y-panel';
@@ -124,7 +152,7 @@ export const init = config => {
         card.append(h);
         return card;
     };
-    const availableProfiles = profiles.filter(profile => Object.keys(profile.state).every(tool => config.tools.includes(tool)));
+    const availableProfiles = profiles.filter(profile => Object.keys(profile.state).every(tool => enabled.includes(tool)));
     const profileButtons = new Map();
     if (availableProfiles.length) {
         const card = makeCard(label('profilesgroup'), 'profiles');
@@ -148,7 +176,7 @@ export const init = config => {
     }
     const controls = new Map();
     GROUPS.forEach(group => {
-        const selected = group.tools.filter(tool => config.tools.includes(tool));
+        const selected = group.tools.filter(tool => enabled.includes(tool));
         if (!selected.length) {
             return;
         }
@@ -204,16 +232,16 @@ export const init = config => {
     try {
         storage = window.localStorage;
     } catch (error) { /* Denied storage uses memory. */ }
-    const prefs = createPreferences(config.scope, config.tools, config.persist, storage);
+    const prefs = createPreferences(config.scope, enabled, config.persist, storage);
     const effects = createEffects(doc);
     const aids = createAids(doc, {root});
     let state = prefs.load();
-    const canonicalState = input => JSON.stringify(Object.entries(normalise(input, config.tools))
+    const canonicalState = input => JSON.stringify(Object.entries(normalise(input, enabled))
         .filter(([, value]) => value && value !== 1).sort(([a], [b]) => a.localeCompare(b)));
     let activeProfile = availableProfiles.find(profile => canonicalState(profile.state) === canonicalState(state))?.id || null;
     let beforeProfile = {};
     const render = () => {
-        state = normalise(state, config.tools);
+        state = normalise(state, enabled);
         effects.apply(state);
         controls.forEach((control, tool) => {
             if (tool === 'fontsize') {
@@ -225,7 +253,7 @@ export const init = config => {
             }
         });
         profileButtons.forEach((control, id) => control.setAttribute('aria-pressed', String(id === activeProfile)));
-        const sizeStatus = config.tools.includes('fontsize')
+        const sizeStatus = enabled.includes('fontsize')
             ? `${label('status')}: ${Math.round((state.fontsize || 1) * 100)}%` : '';
         if (status.textContent !== sizeStatus) {
             status.textContent = sizeStatus;
@@ -246,6 +274,7 @@ export const init = config => {
         }
         return window.getComputedStyle(element).display !== 'none';
     });
+    let returnFocus = null;
     const closePanel = (restoreFocus = true) => {
         if (!panel.open) {
             return;
@@ -254,26 +283,51 @@ export const init = config => {
         panel.close();
         launcher.setAttribute('aria-expanded', 'false');
         if (restoreFocus) {
-            launcher.focus();
+            (returnFocus?.isConnected ? returnFocus : launcher).focus();
         }
+        returnFocus = null;
     };
-    launcher.addEventListener('click', () => {
-        if (activeModal()) {
-            return;
+    const openPanel = () => {
+        if (panel.open || activeModal()) {
+            return false;
         }
+        const active = doc.activeElement;
+        returnFocus = active && active !== doc.body && active !== doc.documentElement ? active : null;
         panel.showModal();
         launcher.setAttribute('aria-expanded', 'true');
         close.focus();
         modalObserver.observe(doc.body, {attributes: true,
             attributeFilter: ['class', 'aria-hidden', 'aria-modal', 'open'], subtree: true});
-    });
-    close.addEventListener('click', () => closePanel());
+        return true;
+    };
+    launcher.addEventListener('click', openPanel);
+    // Alt+A toggles the panel. Ctrl, Meta and Shift are left alone so AltGr layouts and browser or screen reader
+    // commands keep working, and so is typing in a field (Option+A types a character on macOS). The letter is matched
+    // by event.key when it is an ASCII letter (AZERTY has A elsewhere) and by the physical key otherwise (macOS
+    // Option+A reports another character).
+    const onShortcut = event => {
+        const isA = /^[a-z]$/i.test(event.key) ? event.key.toLowerCase() === 'a' : event.code === 'KeyA';
+        if (event.defaultPrevented || event.repeat || !event.altKey || event.ctrlKey || event.metaKey || event.shiftKey ||
+                !isA || event.target?.closest?.('input,textarea,select,[contenteditable]:not([contenteditable="false"])')) {
+            return;
+        }
+        if (panel.open) {
+            event.preventDefault();
+            closePanel();
+        } else if (openPanel()) {
+            event.preventDefault();
+        }
+    };
+    if (shortcut) {
+        doc.addEventListener('keydown', onShortcut);
+    }
     panel.addEventListener('cancel', event => {
         event.preventDefault(); closePanel();
     });
     panel.addEventListener('close', () => {
         modalObserver.disconnect(); launcher.setAttribute('aria-expanded', 'false');
     });
+    close.addEventListener('click', () => closePanel());
     const modalObserver = new window.MutationObserver(() => {
         const other = activeModal();
         if (panel.open && other) {
@@ -329,6 +383,7 @@ export const init = config => {
     resetTop.addEventListener('click', resetAll);
     render();
     const widget = {destroy: () => {
+        doc.removeEventListener('keydown', onShortcut);
         closePanel();
         effects.destroy();
         aids.destroy();

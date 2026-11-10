@@ -471,6 +471,280 @@ const icons = {
                 }
             }
         ]
+    },
+    "dyslexia": {
+        "viewBox": "0 0 24 24",
+        "attrs": {
+            "fill": "none",
+            "stroke": "currentColor",
+            "stroke-width": "2",
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round"
+        },
+        "nodes": [
+            {
+                "tag": "path",
+                "attrs": {
+                    "d": "M12 4v16"
+                }
+            },
+            {
+                "tag": "path",
+                "attrs": {
+                    "d": "M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2"
+                }
+            },
+            {
+                "tag": "path",
+                "attrs": {
+                    "d": "M9 20h6"
+                }
+            }
+        ]
+    },
+    "colour-blind": {
+        "viewBox": "0 0 24 24",
+        "attrs": {
+            "fill": "none",
+            "stroke": "currentColor",
+            "stroke-width": "2",
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round"
+        },
+        "nodes": [
+            {
+                "tag": "path",
+                "attrs": {
+                    "d": "M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2." +
+                        "8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"
+                }
+            },
+            {
+                "tag": "circle",
+                "attrs": {
+                    "cx": "13.5",
+                    "cy": "6.5",
+                    "r": ".5",
+                    "fill": "currentColor"
+                }
+            },
+            {
+                "tag": "circle",
+                "attrs": {
+                    "cx": "17.5",
+                    "cy": "10.5",
+                    "r": ".5",
+                    "fill": "currentColor"
+                }
+            },
+            {
+                "tag": "circle",
+                "attrs": {
+                    "cx": "6.5",
+                    "cy": "12.5",
+                    "r": ".5",
+                    "fill": "currentColor"
+                }
+            },
+            {
+                "tag": "circle",
+                "attrs": {
+                    "cx": "8.5",
+                    "cy": "7.5",
+                    "r": ".5",
+                    "fill": "currentColor"
+                }
+            }
+        ]
+    },
+    "senior": {
+        "viewBox": "0 0 24 24",
+        "attrs": {
+            "fill": "none",
+            "stroke": "currentColor",
+            "stroke-width": "2",
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round"
+        },
+        "nodes": [
+            {
+                "tag": "circle",
+                "attrs": {
+                    "cx": "12",
+                    "cy": "5",
+                    "r": "1"
+                }
+            },
+            {
+                "tag": "path",
+                "attrs": {
+                    "d": "m9 20 3-6 3 6"
+                }
+            },
+            {
+                "tag": "path",
+                "attrs": {
+                    "d": "m6 8 6 2 6-2"
+                }
+            },
+            {
+                "tag": "path",
+                "attrs": {
+                    "d": "M12 10v4"
+                }
+            }
+        ]
+    },
+    "motor": {
+        "viewBox": "0 0 24 24",
+        "attrs": {
+            "fill": "none",
+            "stroke": "currentColor",
+            "stroke-width": "2",
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round"
+        },
+        "nodes": [
+            {
+                "tag": "path",
+                "attrs": {
+                    "d": "M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2"
+                }
+            },
+            {
+                "tag": "path",
+                "attrs": {
+                    "d": "M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2"
+                }
+            },
+            {
+                "tag": "path",
+                "attrs": {
+                    "d": "M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8"
+                }
+            },
+            {
+                "tag": "path",
+                "attrs": {
+                    "d": "M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0" +
+                        " 1 2.83-2.82L7 15"
+                }
+            }
+        ]
+    },
+    "night": {
+        "viewBox": "0 0 24 24",
+        "attrs": {
+            "fill": "none",
+            "stroke": "currentColor",
+            "stroke-width": "2",
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round"
+        },
+        "nodes": [
+            {
+                "tag": "path",
+                "attrs": {
+                    "d": "M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8." +
+                        "268c.344-.215.825-.004.803.401"
+                }
+            }
+        ]
+    },
+    "pause-media": {
+        "viewBox": "0 0 24 24",
+        "attrs": {
+            "fill": "none",
+            "stroke": "currentColor",
+            "stroke-width": "2",
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round"
+        },
+        "nodes": [
+            {
+                "tag": "circle",
+                "attrs": {
+                    "cx": "12",
+                    "cy": "12",
+                    "r": "10"
+                }
+            },
+            {
+                "tag": "line",
+                "attrs": {
+                    "x1": "10",
+                    "x2": "10",
+                    "y1": "15",
+                    "y2": "9"
+                }
+            },
+            {
+                "tag": "line",
+                "attrs": {
+                    "x1": "14",
+                    "x2": "14",
+                    "y1": "15",
+                    "y2": "9"
+                }
+            }
+        ]
+    },
+    "silence-media": {
+        "viewBox": "0 0 24 24",
+        "attrs": {
+            "fill": "none",
+            "stroke": "currentColor",
+            "stroke-width": "2",
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round"
+        },
+        "nodes": [
+            {
+                "tag": "path",
+                "attrs": {
+                    "d": "M11 4.702a.7.7 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 " +
+                        "1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.7.7 0 0 0 11 19.298z"
+                }
+            },
+            {
+                "tag": "path",
+                "attrs": {
+                    "d": "m16.5 14.5 5-5"
+                }
+            },
+            {
+                "tag": "path",
+                "attrs": {
+                    "d": "m16.5 9.5 5 5"
+                }
+            }
+        ]
+    },
+    "colour-vision": {
+        "viewBox": "0 0 24 24",
+        "attrs": {
+            "fill": "none",
+            "stroke": "currentColor",
+            "stroke-width": "2",
+            "stroke-linecap": "round",
+            "stroke-linejoin": "round"
+        },
+        "nodes": [
+            {
+                "tag": "path",
+                "attrs": {
+                    "d": "M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-" +
+                        "1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"
+                }
+            },
+            {
+                "tag": "path",
+                "attrs": {
+                    "d": "M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 " +
+                        "0 1-11.91 4.97"
+                }
+            }
+        ]
     }
 };
 export const createIcon = (doc, key) => {

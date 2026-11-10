@@ -1,0 +1,82 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_sisaccessibility/bootstrap
+
+    Synchronous snippet rendered right after <body> opens, so saved adjustments reach the first paint.
+    It only reads this session's own localStorage entry and sets classes on <html>; styles.css does the rest
+    and the widget module removes them once the exact adjustments are applied.
+
+    Context variables required for this template:
+    * key - JSON string literal: storage key of this Moodle session
+    * tools - JSON array literal: enabled tools in priority order
+    * colours - JSON array literal: mutually exclusive colour tools, a subset of tools
+    * filters - Hidden SVG markup defining the colour-vision filters, possibly empty
+
+    Example context (json):
+    {
+        "key": "\"local_sisaccessibility:v1:0123456789abcdef:0123456789abcdef0123456789abcdef\"",
+        "tools": "[\"bold\",\"fontsize\"]",
+        "colours": "[\"monochrome\"]",
+        "filters": ""
+    }
+}}
+{{{filters}}}
+{{#key}}
+<script>
+(function(key, tools, colours) {
+    try {
+        var raw = window.localStorage.getItem(key);
+        if (!raw || raw.length > 4096) {
+            return;
+        }
+        var saved = JSON.parse(raw);
+        var now = Date.now();
+        if (!saved || saved.version !== 1 || !(saved.expires > now) || saved.expires > now + 7776000000 ||
+                !saved.state || typeof saved.state !== 'object') {
+            return;
+        }
+        var html = document.documentElement;
+        var names = [];
+        var colour = false;
+        tools.forEach(function(tool) {
+            var value = saved.state[tool];
+            if (tool === 'fontsize') {
+                if (typeof value === 'number' && isFinite(value)) {
+                    value = Math.round(Math.max(1, Math.min(2, value)) * 10) / 10;
+                    if (value > 1) {
+                        html.style.setProperty('--sis-pre-fontsize', String(value));
+                        names.push(tool);
+                    }
+                }
+            } else if (value === true && !(colour && colours.indexOf(tool) !== -1)) {
+                colour = colour || colours.indexOf(tool) !== -1;
+                names.push(tool);
+            }
+        });
+        if (names.length) {
+            html.classList.add('sis-a11y-pre');
+            names.forEach(function(name) {
+                html.classList.add('sis-a11y-pre-' + name);
+            });
+        }
+    } catch (error) {
+        // Blocked or corrupt storage: the widget starts from its own defaults.
+    }
+})({{{key}}}, {{{tools}}}, {{{colours}}});
+</script>
+{{/key}}

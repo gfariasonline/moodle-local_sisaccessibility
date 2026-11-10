@@ -39,5 +39,15 @@ function xmldb_local_sisaccessibility_upgrade(int $oldversion): bool {
         }
         upgrade_plugin_savepoint(true, 2026101601, 'local', 'sisaccessibility');
     }
+    if ($oldversion < 2026111001) {
+        // Release 1.1.0 adds colour-vision filters and media tools; extend an untouched 1.0.0 default list.
+        $migrated = \local_sisaccessibility\local\configuration::migrate_tools(
+            get_config('local_sisaccessibility', 'tools')
+        );
+        if ($migrated !== null) {
+            set_config('tools', $migrated, 'local_sisaccessibility');
+        }
+        upgrade_plugin_savepoint(true, 2026111001, 'local', 'sisaccessibility');
+    }
     return true;
 }

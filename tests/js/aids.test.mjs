@@ -131,3 +131,156 @@ test('image descriptions exclude widget content, editor images and Moodle icons'
     }
     aids.destroy();
 });
+
+const media = (win, tag, props = {}) => {
+    const element = win.document.createElement(tag);
+    let paused = props.paused ?? true;
+    let muted = props.muted ?? false;
+    element.pause = () => {
+        paused = true;
+    };
+    element.start = () => {
+        paused = false;
+    };
+    Object.defineProperty(element, 'paused', {get: () => paused, configurable: true});
+    Object.defineProperty(element, 'muted', {get: () => muted, set: value => {
+        muted = value;
+        element.dispatchEvent(new win.Event('volumechange', {bubbles: false}));
+    }, configurable: true});
+    if (props.autoplay) {
+        element.setAttribute('autoplay', '');
+    }
+    return element;
+};
+// Media events do not bubble, so a capture listener on the document is what sees them.
+const emit = (win, target, type) => target.dispatchEvent(new win.Event(type, {bubbles: false}));
+
+test('pausemedia stops playing media, drops autoplay and blocks playback nobody asked for', async () => {
+    const {win, doc, aids} = setup('<main></main>');
+    const playing = media(win, 'video', {paused: false, autoplay: true});
+    const idle = media(win, 'audio');
+    doc.querySelector('main').append(playing, idle);
+    aids.apply({pausemedia: true});
+    assert.equal(playing.paused, true);
+    assert.equal(playing.hasAttribute('autoplay'), false);
+    // A script starts a video with no user gesture: it is stopped again.
+    idle.start();
+    emit(win, idle, 'play');
+    assert.equal(idle.paused, true);
+    // Media added later (AJAX) with autoplay is stopped too.
+    const added = media(win, 'video', {paused: false, autoplay: true});
+    doc.querySelector('main').append(added);
+    await wait(20);
+    assert.equal(added.paused, true);
+    // The user presses play: allowed.
+    fire(win, doc.body, 'pointerdown');
+    const wanted = media(win, 'video');
+    doc.querySelector('main').append(wanted);
+    await wait(20);
+    wanted.start();
+    emit(win, wanted, 'play');
+    assert.equal(wanted.paused, false, 'user-initiated playback is respected');
+    aids.apply({pausemedia: false});
+    assert.equal(playing.hasAttribute('autoplay'), true, 'autoplay attribute restored');
+    aids.destroy();
+});
+test('pausemedia respects the Moodle widget and uses the browser user activation when available', () => {
+    const {win, doc, aids} = setup('<main></main>');
+    const own = media(win, 'audio', {paused: false});
+    doc.getElementById('sis-a11y-root').append(own);
+    let active = false;
+    Object.defineProperty(win.navigator, 'userActivation', {get: () => ({isActive: active}), configurable: true});
+    const player = media(win, 'video');
+    doc.querySelector('main').append(player);
+    aids.apply({pausemedia: true});
+    assert.equal(own.paused, false, 'widget media is never touched');
+    player.start();
+    emit(win, player, 'play');
+    assert.equal(player.paused, true);
+    // The browser's activation alone is not enough without a gesture in our own short window...
+    active = true;
+    player.start();
+    emit(win, player, 'play');
+    assert.equal(player.paused, true);
+    // ...and a gesture the browser does not recognise as activation is not enough either.
+    fire(win, doc.body, 'pointerdown');
+    active = false;
+    emit(win, player, 'play');
+    assert.equal(player.paused, true);
+    active = true;
+    player.start();
+    emit(win, player, 'play');
+    assert.equal(player.paused, false);
+    aids.destroy();
+});
+test('pausemedia freezes animated GIFs on their first frame and restores them', async () => {
+    const {win, doc, aids} = setup('<main><img id="g" src="https://example.test/a.gif" srcset="a.gif 1x, b.gif 2x">' +
+        '<img id="p" src="https://example.test/a.png"><img id="late" src="https://example.test/late.gif"></main>');
+    const loaded = id => {
+        const image = doc.getElementById(id);
+        Object.defineProperty(image, 'complete', {get: () => true, configurable: true});
+        Object.defineProperty(image, 'naturalWidth', {get: () => 10, configurable: true});
+        return image;
+    };
+    const gif = loaded('g');
+    loaded('p');
+    const snapshots = [];
+    const instance = createAids(doc, {root: doc.getElementById('sis-a11y-root'), snapshot: image => {
+        snapshots.push(image.id);
+        return 'data:image/png;base64,STILL';
+    }});
+    instance.apply({pausemedia: true});
+    assert.deepEqual(snapshots, ['g'], 'only GIFs are frozen');
+    assert.equal(gif.getAttribute('src'), 'data:image/png;base64,STILL');
+    assert.equal(gif.hasAttribute('srcset'), false);
+    const late = doc.getElementById('late');
+    assert.equal(late.getAttribute('src'), 'https://example.test/late.gif', 'an image that has not loaded yet is left alone');
+    loaded('late');
+    late.dispatchEvent(new win.Event('load'));
+    assert.deepEqual(snapshots, ['g', 'late']);
+    // A page that replaces the image while the tool is on keeps its own choice.
+    late.setAttribute('src', 'https://example.test/other.gif');
+    instance.apply({pausemedia: false});
+    assert.equal(late.getAttribute('src'), 'https://example.test/other.gif');
+    assert.equal(gif.getAttribute('src'), 'https://example.test/a.gif');
+    assert.equal(gif.getAttribute('srcset'), 'a.gif 1x, b.gif 2x');
+    instance.destroy();
+    aids.destroy();
+});
+test('pausemedia leaves a cross-origin GIF alone when its pixels cannot be read', () => {
+    const {doc} = setup('<main><img id="x" src="https://other.test/x.gif"></main>');
+    const image = doc.getElementById('x');
+    Object.defineProperty(image, 'complete', {get: () => true, configurable: true});
+    Object.defineProperty(image, 'naturalWidth', {get: () => 10, configurable: true});
+    const instance = createAids(doc, {root: doc.getElementById('sis-a11y-root'), snapshot: () => {
+        throw new Error('tainted canvas');
+    }});
+    assert.doesNotThrow(() => instance.apply({pausemedia: true}));
+    assert.equal(image.getAttribute('src'), 'https://other.test/x.gif');
+    instance.apply({pausemedia: false});
+    assert.equal(image.getAttribute('src'), 'https://other.test/x.gif');
+    instance.destroy();
+});
+test('silencemedia mutes every player, keeps them muted and restores the original state', async () => {
+    const {win, doc, aids} = setup('<main></main>');
+    const loud = media(win, 'video');
+    const quiet = media(win, 'audio', {muted: true});
+    doc.querySelector('main').append(loud, quiet);
+    aids.apply({silencemedia: true});
+    assert.equal(loud.muted, true);
+    assert.equal(quiet.muted, true);
+    loud.muted = false;
+    assert.equal(loud.muted, true, 'the page cannot unmute while the tool is on');
+    const added = media(win, 'video');
+    doc.querySelector('main').append(added);
+    await wait(20);
+    assert.equal(added.muted, true);
+    aids.apply({silencemedia: false});
+    assert.equal(loud.muted, false);
+    assert.equal(quiet.muted, true, 'already-muted players stay muted');
+    assert.equal(added.muted, false);
+    loud.muted = true;
+    loud.muted = false;
+    assert.equal(loud.muted, false, 'no listener is left after switching off');
+    aids.destroy();
+});

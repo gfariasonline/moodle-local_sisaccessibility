@@ -414,11 +414,15 @@ html.sis-a11y-guide-on #sis-a11y-root .sis-a11y-panel[open]::after {
         );
 }
 html.sis-a11y-cursor body,
-html.sis-a11y-cursor body *:not(#sis-a11y-root *):not(input):not(textarea):not([contenteditable]) {
+html.sis-a11y-cursor body *:not(#sis-a11y-root *):not(input):not(textarea):not([contenteditable]),
+html.sis-a11y-pre-cursor body,
+html.sis-a11y-pre-cursor body *:not(#sis-a11y-root *):not(input):not(textarea):not([contenteditable]) {
     /* stylelint-disable-next-line declaration-no-important -- Must override host page styles. */
     cursor: url([[pix:local_sisaccessibility|cursor]]) 4 2, auto !important;
 }
 html.sis-a11y-animations body
+*:not(#sis-a11y-root):not(#sis-a11y-root *):not(.modal):not(.modal *):not(.tox):not(.tox *):not(.editor_atto):not(.editor_atto *),
+html.sis-a11y-pre-animations body
 *:not(#sis-a11y-root):not(#sis-a11y-root *):not(.modal):not(.modal *):not(.tox):not(.tox *):not(.editor_atto):not(.editor_atto *) {
     /* stylelint-disable-next-line declaration-no-important -- Must override host page styles. */
     animation-play-state: paused !important;
@@ -427,6 +431,76 @@ html.sis-a11y-animations body
     /* stylelint-disable-next-line declaration-no-important -- Must override host page styles. */
     scroll-behavior: auto !important;
 }
+
+/*
+ * First-paint approximation of the saved adjustments. The inline snippet in templates/bootstrap.mustache sets
+ * html.sis-a11y-pre and one sis-a11y-pre-<tool> class per saved tool; amd/src/init.js removes them as soon as the
+ * widget has applied the exact adjustments. Filters sit on the root element, which (unlike any other element)
+ * does not become the containing block of fixed descendants. The effects here are close, not identical, to the
+ * per-element ones in amd/src/effects.js.
+ */
+/* stylelint-disable declaration-no-important, max-line-length -- Must override host page styles until the widget takes over. */
+html.sis-a11y-pre-fontsize {
+    font-size: calc(100% * var(--sis-pre-fontsize, 1)) !important;
+}
+html.sis-a11y-pre-bold body :is(h1, h2, h3, h4, h5, h6, p, a, dl, dt, dd, li, ol, th, td, span, blockquote, label, button):not(#sis-a11y-root *) {
+    font-weight: 700 !important;
+}
+html.sis-a11y-pre-lineheight body :is(h1, h2, h3, h4, h5, h6, p, a, dl, dt, dd, li, ol, th, td, span, blockquote, label, button):not(#sis-a11y-root *) {
+    line-height: 2 !important;
+}
+html.sis-a11y-pre-letterspacing body :is(h1, h2, h3, h4, h5, h6, p, a, dl, dt, dd, li, ol, th, td, span, blockquote, label, button):not(#sis-a11y-root *) {
+    letter-spacing: 2px !important;
+}
+html.sis-a11y-pre-dyslexia body :is(h1, h2, h3, h4, h5, h6, p, a, dl, dt, dd, li, ol, th, td, span, blockquote, label, button):not(#sis-a11y-root *) {
+    font-family: SISOpenDyslexic, Arial, sans-serif !important;
+}
+html.sis-a11y-pre-links body a[href]:not(#sis-a11y-root *),
+html.sis-a11y-pre-headings body :is(h1, h2, h3, h4, h5, h6):not(#sis-a11y-root *) {
+    text-decoration-line: underline !important;
+    text-decoration-style: double !important;
+    text-decoration-thickness: 2px !important;
+    text-underline-offset: 3px !important;
+}
+html.sis-a11y-pre-lightcontrast,
+html.sis-a11y-pre-lightcontrast body,
+html.sis-a11y-pre-lightcontrast body :not(#sis-a11y-root, #sis-a11y-root *, svg *, img, video, canvas, iframe) {
+    background-color: #fff !important;
+    background-image: none !important;
+    color: #000 !important;
+}
+html.sis-a11y-pre-darkcontrast,
+html.sis-a11y-pre-darkcontrast body,
+html.sis-a11y-pre-darkcontrast body :not(#sis-a11y-root, #sis-a11y-root *, svg *, img, video, canvas, iframe) {
+    background-color: #000 !important;
+    background-image: none !important;
+    color: #fff !important;
+}
+html.sis-a11y-pre-monochrome {
+    filter: grayscale(100%);
+}
+html.sis-a11y-pre-lowsaturation {
+    filter: saturate(50%);
+}
+html.sis-a11y-pre-highsaturation {
+    filter: saturate(200%);
+}
+html.sis-a11y-pre-highcontrast {
+    filter: contrast(125%);
+}
+html.sis-a11y-pre-protanopia {
+    filter: url(#sis-a11y-protanopia);
+}
+html.sis-a11y-pre-deuteranopia {
+    filter: url(#sis-a11y-deuteranopia);
+}
+html.sis-a11y-pre-tritanopia {
+    filter: url(#sis-a11y-tritanopia);
+}
+html.sis-a11y-pre-hideimages body :is(img, input[type="image"]):not(#sis-a11y-root *) {
+    opacity: 0 !important;
+}
+/* stylelint-enable declaration-no-important, max-line-length */
 
 @media (max-width: 600px) {
     #sis-a11y-root[data-position] {

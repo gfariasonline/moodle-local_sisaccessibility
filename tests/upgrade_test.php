@@ -40,6 +40,20 @@ final class upgrade_test extends \advanced_testcase {
         $this->assertSame(implode(',', configuration::TOOLS), configuration::migrate_tools($shuffled));
     }
 
+    public function test_untouched_release_1_0_default_receives_the_release_1_1_tools(): void {
+        $this->assertCount(18, configuration::RELEASE_1_0_TOOLS);
+        $this->assertSame(configuration::RELEASE_1_0_TOOLS, array_slice(configuration::TOOLS, 0, 18));
+        $stored = implode(',', configuration::RELEASE_1_0_TOOLS);
+        $this->assertSame(implode(',', configuration::TOOLS), configuration::migrate_tools($stored));
+        $this->assertSame(
+            implode(',', configuration::TOOLS),
+            configuration::migrate_tools(implode(' , ', array_reverse(configuration::RELEASE_1_0_TOOLS)))
+        );
+        // One tool the administrator switched off makes it a customised list.
+        $this->assertNull(configuration::migrate_tools(implode(',', array_slice(configuration::RELEASE_1_0_TOOLS, 1))));
+        $this->assertNull(configuration::migrate_tools($stored . ',protanopia'));
+    }
+
     public function test_custom_selections_are_preserved(): void {
         $this->assertNull(configuration::migrate_tools(''));
         $this->assertNull(configuration::migrate_tools('fontsize,links'));

@@ -7,10 +7,11 @@ description: |
   external account or remote widget service is required.
 
   - Text size, spacing, readable font and content highlighting
-  - Contrast, monochrome and saturation adjustments
+  - Contrast, monochrome, saturation and colour-vision filters
   - Reading guide, reduced animations and larger cursor
+  - Pause videos and GIFs, mute media and an Alt+A shortcut
   - Image visibility and image descriptions
-  - Four profiles combining the available adjustments
+  - Nine profiles combining the available adjustments
   - Configurable button position for desktop and mobile
   - English and Brazilian Portuguese interface
 

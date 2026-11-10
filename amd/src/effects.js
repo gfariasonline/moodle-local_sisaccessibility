@@ -1,8 +1,11 @@
 // This file is part of Moodle - http://moodle.org/
 // Copyright 2026 Thiago Serrão. GNU GPL v3 or later.
 /** @module local_sisaccessibility/effects */
-import {textSelector, iconSelector, textStyles, highlightStyles, filters, contrastStyles}
+import {textSelector, iconSelector, textStyles, highlightStyles, filters as siennaFilters, contrastStyles}
     from 'local_sisaccessibility/sienna';
+import {colourVisionFilters, readMatrix, applyMatrix} from 'local_sisaccessibility/colourvision';
+
+const filters = {...siennaFilters, ...colourVisionFilters};
 
 // Every sis-a11y UI node (root, guide, structure panel, aids). html carries state classes, so it and body are not UI.
 const WIDGET = '[id^="sis-a11y"],:not(html):not(body)[class*="sis-a11y"]';
@@ -205,7 +208,8 @@ export const createEffects = (doc = document) => {
         }));
         ancestors.forEach(([el, value, priority]) => el.style.setProperty('font-size', value, priority));
         const contrast = Object.keys(contrastStyles).find(tool => state[tool]);
-        const filter = Object.keys(filters).find(tool => state[tool]);
+        // A colour-vision filter needs its SVG definition on the page; referencing a missing one could hide content.
+        const filter = Object.keys(filters).find(tool => state[tool] && (!colourVisionFilters[tool] || readMatrix(doc, tool)));
         const {targets, tinted} = filter && mode !== 'text' ? filterTargets(root, scope, info) : {targets: [], tinted: []};
         scope.forEach(element => {
             if (mode === 'filter' || excluded(element)) {
@@ -240,8 +244,9 @@ export const createEffects = (doc = document) => {
         });
         tinted.forEach(element => {
             const colour = parseColour(info.get(element).background);
-            if (colour && colour.alpha > 0 && TINT[filter]) {
-                const [r, g, b] = TINT[filter](colour.rgb).map(value => Math.round(Math.min(255, Math.max(0, value))));
+            const tint = TINT[filter] || (colourVisionFilters[filter] && (rgb => applyMatrix(rgb, readMatrix(doc, filter))));
+            if (colour && colour.alpha > 0 && tint) {
+                const [r, g, b] = tint(colour.rgb).map(value => Math.round(Math.min(255, Math.max(0, value))));
                 write(element, 'background-color', `rgba(${r}, ${g}, ${b}, ${colour.alpha})`);
             }
         });

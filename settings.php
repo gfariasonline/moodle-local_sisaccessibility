@@ -28,7 +28,7 @@ if ($hassiteconfig) {
     $settings = new admin_settingpage('local_sisaccessibility', get_string('pluginname', 'local_sisaccessibility'));
     $ADMIN->add('localplugins', $settings);
     if ($ADMIN->fulltree) {
-        foreach (['enabled', 'showlogin', 'showadmin', 'persist'] as $name) {
+        foreach (['enabled', 'showlogin', 'showadmin', 'persist', 'shortcut'] as $name) {
             $settings->add(new admin_setting_configcheckbox(
                 'local_sisaccessibility/' . $name,
                 get_string($name, 'local_sisaccessibility'),

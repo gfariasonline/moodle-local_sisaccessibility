@@ -1,9 +1,11 @@
 // This file is part of Moodle - http://moodle.org/
 // Copyright 2026 Thiago Serrão. GNU GPL v3 or later.
 /** @module local_sisaccessibility/preferences */
-const COLOURS = ['monochrome', 'lowsaturation', 'highsaturation', 'highcontrast', 'lightcontrast', 'darkcontrast'];
+// Same order as configuration::COLOURS in PHP: the first saved colour tool wins if a stored state names several.
+const COLOURS = ['monochrome', 'lowsaturation', 'highsaturation', 'highcontrast', 'lightcontrast', 'darkcontrast',
+    'protanopia', 'deuteranopia', 'tritanopia'];
 const TOOLS = ['fontsize', 'bold', 'lineheight', 'letterspacing', 'dyslexia', 'links', 'headings', ...COLOURS,
-    'cursor', 'guide', 'animations', 'hideimages', 'imagetooltips'];
+    'cursor', 'guide', 'animations', 'hideimages', 'imagetooltips', 'pausemedia', 'silencemedia'];
 const PREFIX = 'local_sisaccessibility:v1:';
 const RETENTION = 90 * 24 * 60 * 60 * 1000;
 

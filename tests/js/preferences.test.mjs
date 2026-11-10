@@ -35,3 +35,11 @@ test('removed tools are discarded from previously saved preferences', () => {
     const oldState = Object.fromEntries(removed.map(key => [key, true]));
     assert.deepEqual(normalise({...oldState, guide: true}, [...removed, 'guide']), {guide: true});
 });
+
+test('colour-vision filters join the mutually exclusive colour modes; media tools are plain switches', () => {
+    const enabled = ['monochrome', 'deuteranopia', 'tritanopia', 'pausemedia', 'silencemedia'];
+    assert.deepEqual(normalise({deuteranopia: true, tritanopia: true, pausemedia: true, silencemedia: true}, enabled),
+        {deuteranopia: true, pausemedia: true, silencemedia: true});
+    assert.deepEqual(normalise({monochrome: true, tritanopia: true}, enabled), {monochrome: true});
+    assert.deepEqual(normalise({pausemedia: 'yes', protanopia: true}, enabled), {});
+});

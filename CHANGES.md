@@ -1,3 +1,25 @@
+# 1.1.0 — 2026-11-10
+
+Features adopted after reviewing the UFPel `local_a11y` plugin, reimplemented on this plugin's own tools.
+
+- **Saved adjustments reach the first paint.** A small inline snippet after `<body>` restores this session's saved
+  tools as `sis-a11y-pre-*` classes on `<html>`; `styles.css` approximates them until the widget applies the exact
+  adjustments and removes the classes. No new data is read, stored or sent. Added the top-of-body output hook and
+  `templates/bootstrap.mustache`.
+- **Five more profiles:** Dyslexia, Colour blindness, Older adults, Motor difficulty and Night mode (nine in total).
+- **Alt+A shortcut** to open and close the panel, with `aria-keyshortcuts` on the launcher. New setting *Keyboard
+  shortcut* (on by default); ignored with Ctrl, Meta or Shift, on key repeat, while typing in a field and while a
+  Moodle modal is open; focus returns to where the user was.
+- **Pause videos and GIFs** and **Mute media** tools: stop playing media and unrequested playback, freeze same-origin
+  animated GIFs on their first frame, and keep players muted. Not applicable inside iframes.
+- **Protanopia, deuteranopia and tritanopia filters**, built from one set of matrices rendered as a hidden SVG
+  (`classes/local/colour_vision.php`). They join the mutually exclusive colour modes.
+- Upgrade: an untouched 1.0.0 tool list is extended with the five new tools; customised lists are preserved.
+  Version 2026111001.
+- Lucide icons added (type, palette, person-standing, hand, moon, circle-pause, volume-x, droplets) from the pinned
+  upstream commit, with checksums in `thirdparty/SHA256SUMS`.
+- `amd/build` regenerated with Moodle 5.3's Grunt; the unchanged `sienna.min.js` keeps its licence header.
+
 # 1.0.0 — 2026-11-06
 
 - Primeira versão estável.

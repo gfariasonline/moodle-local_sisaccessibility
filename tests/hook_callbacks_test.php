@@ -113,4 +113,100 @@ final class hook_callbacks_test extends \advanced_testcase {
             $PAGE = $originalpage;
         }
     }
+
+    /**
+     * Minimal page for the early snippet: an eligible local standard page.
+     * @return object Page stand-in
+     */
+    private function early_page(): object {
+        return (object) [
+            'pagelayout' => 'standard', 'course' => (object) ['id' => 1],
+            'url' => new class {
+                /**
+                 * Return a local eligible path.
+                 * @return string Local path
+                 */
+                public function out_as_local_url() {
+                    return '/';
+                }
+            },
+        ];
+    }
+
+    public function test_early_snippet_is_rendered_once_with_json_literals_and_the_session_key(): void {
+        global $PAGE;
+        $this->resetAfterTest();
+        $this->setGuestUser();
+        set_config('enabled', 1, 'local_sisaccessibility');
+        $originalpage = $PAGE;
+        $PAGE = $this->early_page();
+        $renderer = $this->getMockBuilder(\renderer_base::class)->disableOriginalConstructor()
+            ->onlyMethods(['render_from_template'])->getMock();
+        $renderer->expects($this->once())->method('render_from_template')
+            ->with('local_sisaccessibility/bootstrap', $this->callback(static function ($context) {
+                $key = json_decode($context['key'], true, 512, JSON_THROW_ON_ERROR);
+                $tools = json_decode($context['tools'], true, 512, JSON_THROW_ON_ERROR);
+                $colours = json_decode($context['colours'], true, 512, JSON_THROW_ON_ERROR);
+                return $key === \local_sisaccessibility\local\configuration::storage_scope() &&
+                    $tools === \local_sisaccessibility\local\configuration::TOOLS &&
+                    $colours === \local_sisaccessibility\local\configuration::COLOURS &&
+                    str_contains($context['filters'], 'sis-a11y-deuteranopia');
+            }))->willReturn('<script></script>');
+        try {
+            $this->assertSame('<script></script>', hook_callbacks::get_bootstrap_html($renderer));
+            $this->assertSame('', hook_callbacks::get_bootstrap_html($renderer));
+        } finally {
+            $PAGE = $originalpage;
+        }
+    }
+
+    public function test_early_snippet_is_skipped_on_pages_without_the_widget(): void {
+        global $PAGE;
+        $this->resetAfterTest();
+        $originalpage = $PAGE;
+        $PAGE = $this->early_page();
+        $renderer = $this->getMockBuilder(\renderer_base::class)->disableOriginalConstructor()
+            ->onlyMethods(['render_from_template'])->getMock();
+        $renderer->expects($this->never())->method('render_from_template');
+        try {
+            set_config('enabled', 0, 'local_sisaccessibility');
+            $this->assertSame('', hook_callbacks::get_bootstrap_html($renderer));
+            set_config('enabled', 1, 'local_sisaccessibility');
+            $PAGE->pagelayout = 'embedded';
+            $this->assertSame('', hook_callbacks::get_bootstrap_html($renderer));
+        } finally {
+            $PAGE = $originalpage;
+        }
+    }
+
+    public function test_early_snippet_renders_script_only_when_browser_persistence_is_on(): void {
+        global $OUTPUT;
+        $this->resetAfterTest();
+        $this->setGuestUser();
+        $on = $OUTPUT->render_from_template(
+            'local_sisaccessibility/bootstrap',
+            \local_sisaccessibility\local\configuration::bootstrap_context(
+                \local_sisaccessibility\local\configuration::normalise((object) ['persist' => '1'])
+            )
+        );
+        $this->assertStringContainsString('<script>', $on);
+        $this->assertStringContainsString(\local_sisaccessibility\local\configuration::storage_scope(), $on);
+        $this->assertStringContainsString('id="sis-a11y-filters"', $on);
+        $this->assertStringNotContainsString('{{', $on);
+        $off = $OUTPUT->render_from_template(
+            'local_sisaccessibility/bootstrap',
+            \local_sisaccessibility\local\configuration::bootstrap_context(
+                \local_sisaccessibility\local\configuration::normalise((object) ['persist' => '0'])
+            )
+        );
+        $this->assertStringNotContainsString('<script', $off);
+        $this->assertStringContainsString('id="sis-a11y-filters"', $off, 'the filters are needed even without persistence');
+        $none = $OUTPUT->render_from_template(
+            'local_sisaccessibility/bootstrap',
+            \local_sisaccessibility\local\configuration::bootstrap_context(
+                \local_sisaccessibility\local\configuration::normalise((object) ['tools' => 'bold'])
+            )
+        );
+        $this->assertStringNotContainsString('sis-a11y-filters', $none);
+    }
 }

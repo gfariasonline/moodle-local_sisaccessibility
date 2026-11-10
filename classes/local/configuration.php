@@ -35,12 +35,27 @@ final class configuration {
         'darkcontrast', 'cursor', 'guide', 'animations',
     ];
 
+    /** @var string[] Tools shipped by release 1.0.0, the second list migrated automatically. */
+    public const RELEASE_1_0_TOOLS = [
+        'fontsize', 'bold', 'lineheight', 'letterspacing', 'dyslexia', 'links', 'headings',
+        'monochrome', 'lowsaturation', 'highsaturation', 'highcontrast', 'lightcontrast',
+        'darkcontrast', 'cursor', 'guide', 'animations',
+        'hideimages', 'imagetooltips',
+    ];
+
     /** @var string[] Bundled tool identifiers. */
     public const TOOLS = [
         'fontsize', 'bold', 'lineheight', 'letterspacing', 'dyslexia', 'links', 'headings',
         'monochrome', 'lowsaturation', 'highsaturation', 'highcontrast', 'lightcontrast',
         'darkcontrast', 'cursor', 'guide', 'animations',
         'hideimages', 'imagetooltips',
+        'protanopia', 'deuteranopia', 'tritanopia', 'pausemedia', 'silencemedia',
+    ];
+
+    /** @var string[] Mutually exclusive colour tools, in the order the browser resolves conflicts. */
+    public const COLOURS = [
+        'monochrome', 'lowsaturation', 'highsaturation', 'highcontrast', 'lightcontrast', 'darkcontrast',
+        'protanopia', 'deuteranopia', 'tritanopia',
     ];
 
     /** @var string[] Interface labels sent to the browser besides the tool names. */
@@ -51,6 +66,9 @@ final class configuration {
         'profile_seizure_safe', 'profile_seizure_safe_desc',
         'profile_visually_impaired', 'profile_visually_impaired_desc', 'profile_adhd_friendly',
         'profile_adhd_friendly_desc', 'profile_cognitive_learning', 'profile_cognitive_learning_desc',
+        'profile_dyslexia', 'profile_dyslexia_desc', 'profile_colour_blind', 'profile_colour_blind_desc',
+        'profile_senior', 'profile_senior_desc', 'profile_motor', 'profile_motor_desc',
+        'profile_night', 'profile_night_desc', 'shortcut_hint',
     ];
 
     /** @var string[] Allowed trigger positions. */
@@ -63,7 +81,7 @@ final class configuration {
      */
     public static function normalise(\stdClass $raw): array {
         $result = [];
-        foreach (['enabled', 'showlogin', 'showadmin', 'persist'] as $name) {
+        foreach (['enabled', 'showlogin', 'showadmin', 'persist', 'shortcut'] as $name) {
             $result[$name] = !isset($raw->$name) || (string) $raw->$name === '1';
         }
         $selected = isset($raw->tools) && is_string($raw->tools) ? explode(',', $raw->tools) : self::TOOLS;
@@ -141,8 +159,8 @@ final class configuration {
     }
 
     /**
-     * Decide whether an upgrade should extend the stored tool list with the tools added after the first release.
-     * Only the untouched original default list is extended; any administrator customisation is preserved.
+     * Decide whether an upgrade should extend the stored tool list with the tools added after a release.
+     * Only an untouched default list of an earlier release is extended; any administrator customisation is preserved.
      * @param string|false|null $stored Value stored in the "tools" setting
      * @return string|null New comma-separated list, or null when nothing must change
      */
@@ -151,13 +169,15 @@ final class configuration {
             return null;
         }
         $selected = array_map('trim', explode(',', $stored));
-        if (
-            count($selected) !== count(self::ORIGINAL_TOOLS) ||
-                array_diff(self::ORIGINAL_TOOLS, $selected) || array_diff($selected, self::ORIGINAL_TOOLS)
-        ) {
-            return null;
+        foreach ([self::ORIGINAL_TOOLS, self::RELEASE_1_0_TOOLS] as $default) {
+            if (
+                count($selected) === count($default) &&
+                    !array_diff($default, $selected) && !array_diff($selected, $default)
+            ) {
+                return implode(',', self::TOOLS);
+            }
         }
-        return implode(',', self::TOOLS);
+        return null;
     }
 
     /**
@@ -229,6 +249,23 @@ final class configuration {
             self::for_client($config),
             JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR
         )];
+    }
+
+    /**
+     * Prepare the early snippet. Values are JSON literals with every HTML-significant character escaped, so the
+     * template can print them unescaped inside its script.
+     * @param array $config Validated settings
+     * @return array Mustache context
+     */
+    public static function bootstrap_context(array $config): array {
+        $flags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR;
+        $colours = array_values(array_intersect(self::COLOURS, $config['tools']));
+        return [
+            'key' => $config['persist'] && $config['tools'] ? json_encode(self::storage_scope(), $flags) : '',
+            'tools' => json_encode($config['tools'], $flags),
+            'colours' => json_encode($colours, $flags),
+            'filters' => colour_vision::svg($config['tools']),
+        ];
     }
 
     /**

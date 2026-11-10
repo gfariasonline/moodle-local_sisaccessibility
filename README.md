@@ -7,7 +7,7 @@ No CDN, third-party API, telemetry or external asset download is required.
 
 ## Requirements and status
 
-- **Release:** 1.0.0, stable (`2026110601`).
+- **Release:** 1.1.0, stable (`2026111001`).
 - **Minimum Moodle:** 4.5 (`2024100700`). The intended range is Moodle 4.5–5.3;
   the complete installation and integration test matrix is still pending.
 - **PHP:** use the PHP version and extensions required by your Moodle release.
@@ -17,25 +17,58 @@ No CDN, third-party API, telemetry or external asset download is required.
 
 ## Features
 
-The toolbar includes 18 tools:
+The toolbar includes 23 tools:
 
 | Group | Tools |
 | --- | --- |
 | Text and reading | Text size (100–200%), bold text, line height, letter spacing, OpenDyslexic font, highlighted links and highlighted headings |
-| Colour | Monochrome, low saturation, high saturation, high contrast, light contrast and dark contrast |
+| Colour | Monochrome, low saturation, high saturation, high contrast, light contrast, dark contrast and protanopia, deuteranopia and tritanopia colour filters |
 | Visual assistance | Large cursor, reading guide and pause CSS animations |
+| Media | Pause videos and GIFs, mute media |
 | Images | Hide images and show image descriptions from alternative text |
 
-Colour modes are mutually exclusive. Four presets combine enabled tools: **Less motion**,
-**Low vision**, **Focus**, and **Reading and learning**. A preset is available only when its
-required tools are enabled. Focus uses the reading guide: a transparent 60 px strip with a
-darkened surround, following the pointer or keyboard focus.
+Colour modes, including the three colour-vision filters, are mutually exclusive. Nine presets combine enabled tools:
+**Less motion**, **Low vision**, **Focus**, **Reading and learning**, **Dyslexia**, **Colour blindness**, **Older adults**,
+**Motor difficulty** and **Night mode**. A preset is available only when its required tools are enabled. Focus uses the
+reading guide: a transparent 60 px strip with a darkened surround, following the pointer or keyboard focus.
 
-The panel uses native buttons and a modal dialog, supports keyboard navigation and Escape,
-and includes a reset control. The default colour is Sienna blue (`#0848CA`). Desktop and
-mobile launcher positions can be configured independently, including vertically centred
-left and right positions. The installed-language selector appears at the end of the panel,
-above the footer with the SIS logo and the GFARIAS website link.
+The panel uses native buttons and a modal dialog, supports keyboard navigation and Escape, and includes a reset control.
+**Alt+A** opens and closes it from anywhere on the page except while typing in a field or while a Moodle dialog is open;
+closing it returns focus to where the user was. Administrators can turn the shortcut off, for example if it conflicts
+with a screen reader command. The default colour is Sienna blue (`#0848CA`). Desktop and mobile launcher
+positions can be configured independently, including vertically centred left and right positions. The installed-language
+selector appears at the end of the panel, above the footer with the SIS logo and the GFARIAS website link.
+
+### Colour-vision filters
+
+The protanopia, deuteranopia and tritanopia tools apply a daltonisation filter: colours a person with that dichromacy
+cannot tell apart are shifted into differences they can see, and greys and white are left unchanged. A filter is
+offered only when the page contains its definition (themes that skip Moodle's standard top-of-body output do not). The matrices
+combine the dichromacy simulation of Machado, Oliveira and Fernandes (2009, linear RGB, full severity) with a standard
+error redistribution. They are an aid for telling colours apart, not a clinical correction, and they do not replace
+content that does not rely on colour alone. The definitions are rendered once as a hidden inline SVG
+(`classes/local/colour_vision.php`) and read back by the browser module, so there is a single copy of the matrices.
+
+### Media
+
+*Pause videos and GIFs* stops audio and video that are playing, removes `autoplay`, stops playback that no user gesture
+asked for and freezes animated GIFs on their first frame. Playback the user starts is respected. A GIF can only be frozen
+when the browser may read its pixels (same origin or CORS-enabled); other GIFs are left as they are. *Mute media* keeps
+every `<audio>` and `<video>` element muted, including players added later and players the page unmutes; switching the tool
+off restores each player's previous state. Neither tool reaches into iframes, so players embedded from other sites
+(YouTube, Vimeo and similar) are not affected.
+
+### Saved adjustments on first paint
+
+When browser persistence is on, a few lines of inline script right after `<body>` opens read this session's own
+`localStorage` entry and add `sis-a11y-pre-*` classes to `<html>`. `styles.css` approximates the saved adjustments from
+those classes, so the page does not first appear unadjusted. The widget replaces the approximation with the exact
+adjustments and removes the classes as soon as it loads. The first-paint rules are close, not identical, to the exact
+ones: text scale uses the root font size, contrast and colour filters sit on the root element, and tools such as the
+reading guide, image descriptions and media control wait for the widget. The script reads and writes nothing else, sends
+nothing anywhere and does nothing when storage is blocked. Themes that do not render Moodle's standard top-of-body output
+skip it and simply show the adjustments when the widget loads. If the widget's JavaScript fails to load at all, the
+approximation stays in place and cannot be reset from the page; clearing the site's browser data removes it.
 
 ## Installation
 
@@ -99,7 +132,7 @@ users can clear remaining entries through their browser's site-data controls.
 
 The tools do not adapt content inside iframes, H5P, LTI or SCORM packages, or the native
 Moodle App. Pausing CSS animations does not stop video, audio, animated GIFs or JavaScript
-activity behaviour. Editors, form controls, icons and other protected elements are excluded
+activity behaviour; use *Pause videos and GIFs* and *Mute media* for media in the page itself. Editors, form controls, icons and other protected elements are excluded
 from relevant page effects. Theme and activity combinations require practical testing.
 This toolbar does not certify WCAG compliance or replace accessible course content.
 

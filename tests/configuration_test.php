@@ -83,11 +83,33 @@ final class configuration_test extends \advanced_testcase {
         $this->assertSame(configuration::TOOLS, configuration::normalise(new \stdClass())['tools']);
     }
 
+    public function test_release_1_1_tools_are_bundled_and_the_shortcut_defaults_to_enabled(): void {
+        foreach (['protanopia', 'deuteranopia', 'tritanopia', 'pausemedia', 'silencemedia'] as $tool) {
+            $this->assertContains($tool, configuration::TOOLS);
+        }
+        $this->assertTrue(configuration::normalise(new \stdClass())['shortcut']);
+        $this->assertTrue(configuration::normalise((object) ['shortcut' => '1'])['shortcut']);
+        $this->assertFalse(configuration::normalise((object) ['shortcut' => '0'])['shortcut']);
+        $this->assertFalse(configuration::normalise((object) ['shortcut' => ''])['shortcut']);
+    }
+
+    public function test_colour_modes_are_tools_and_match_the_browser_module(): void {
+        $this->assertSame(configuration::COLOURS, array_values(array_intersect(configuration::TOOLS, configuration::COLOURS)));
+        $source = file_get_contents(dirname(__DIR__) . '/amd/src/preferences.js');
+        $this->assertSame(1, preg_match('/const COLOURS = \[(.*?)\];/s', $source, $colours));
+        preg_match_all("/'(\w+)'/", $colours[1], $names);
+        $this->assertSame(configuration::COLOURS, $names[1], 'PHP and JavaScript must resolve colour conflicts alike.');
+        $this->assertSame(1, preg_match('/const TOOLS = \[(.*?)\];/s', $source, $tools));
+        preg_match_all("/'(\w+)'/", $tools[1], $listed);
+        $browsertools = array_merge($listed[1], $names[1]);
+        $this->assertEqualsCanonicalizing(configuration::TOOLS, $browsertools);
+    }
+
     public function test_removed_tools_and_labels_are_rejected_from_stored_configuration(): void {
         $removed = ['superfocus', 'pdfreader', 'pagestructure', 'screenreader'];
         $config = configuration::normalise((object) ['tools' => implode(',', array_merge($removed, ['links']))]);
         $this->assertSame(['links'], $config['tools']);
-        $this->assertCount(18, configuration::TOOLS);
+        $this->assertCount(23, configuration::TOOLS);
         foreach ($removed as $tool) {
             $this->assertNotContains($tool, configuration::TOOLS);
             $this->assertNotContains($tool, configuration::LABELS);
