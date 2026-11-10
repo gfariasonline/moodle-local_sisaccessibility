@@ -24,6 +24,7 @@
 
 namespace local_sisaccessibility;
 
+use local_sisaccessibility\local\client_configuration;
 use local_sisaccessibility\local\configuration;
 
 /**
@@ -35,21 +36,21 @@ final class client_configuration_test extends \advanced_testcase {
     public function test_scope_is_stable_and_rotates_for_account_changes(): void {
         $this->resetAfterTest();
         $this->setGuestUser();
-        $guest = configuration::storage_scope();
-        $this->assertSame($guest, configuration::storage_scope());
+        $guest = client_configuration::storage_scope();
+        $this->assertSame($guest, client_configuration::storage_scope());
         $this->setUser($this->getDataGenerator()->create_user());
-        $user = configuration::storage_scope();
+        $user = client_configuration::storage_scope();
         $this->assertNotSame($guest, $user);
-        $this->assertSame($user, configuration::storage_scope());
-        configuration::reset_scope();
-        $this->assertNotSame($user, configuration::storage_scope());
+        $this->assertSame($user, client_configuration::storage_scope());
+        client_configuration::reset_scope();
+        $this->assertNotSame($user, client_configuration::storage_scope());
         $this->assertMatchesRegularExpression('/^local_sisaccessibility:v1:[a-f0-9]{16}:[a-f0-9]{32}$/', $user);
     }
 
     public function test_client_payload_contains_only_public_values(): void {
         $this->resetAfterTest();
         $this->setGuestUser();
-        $config = configuration::for_client(configuration::normalise((object) ['excludedcourses' => '12']));
+        $config = client_configuration::for_client(configuration::normalise((object) ['excludedcourses' => '12']));
         foreach (['enabled', 'showlogin', 'showadmin', 'excludedcourses', 'owner', 'userid'] as $privatekey) {
             $this->assertArrayNotHasKey($privatekey, $config);
         }
@@ -63,7 +64,7 @@ final class client_configuration_test extends \advanced_testcase {
         $this->resetAfterTest();
         $this->setGuestUser();
         $SESSION->forcelang = 'en';
-        $config = configuration::for_client(configuration::normalise(new \stdClass()));
+        $config = client_configuration::for_client(configuration::normalise(new \stdClass()));
         $this->assertSame(current_language(), $config['language']);
         $this->assertSame(get_string_manager()->get_list_of_translations(), $config['languages']);
         $this->assertArrayNotHasKey('readerurl', $config);
@@ -79,15 +80,15 @@ final class client_configuration_test extends \advanced_testcase {
         $original = $CFG->wwwroot;
         try {
             $CFG->wwwroot = 'https://example.invalid/moodle-one';
-            $first = configuration::storage_scope();
+            $first = client_configuration::storage_scope();
             $CFG->wwwroot = 'https://example.invalid/moodle-two';
-            $this->assertNotSame($first, configuration::storage_scope());
+            $this->assertNotSame($first, client_configuration::storage_scope());
         } finally {
             $CFG->wwwroot = $original;
         }
     }
     public function test_language_list_uses_installed_translations(): void {
-        $languages = configuration::installed_languages(current_language());
+        $languages = client_configuration::installed_languages(current_language());
         $this->assertNotEmpty($languages);
         $this->assertSame(get_string_manager()->get_list_of_translations(), $languages);
     }
@@ -95,10 +96,10 @@ final class client_configuration_test extends \advanced_testcase {
     public function test_html_configuration_round_trips_without_raw_html_tags(): void {
         $this->resetAfterTest();
         $this->setGuestUser();
-        $context = configuration::template_context(configuration::normalise(new \stdClass()));
+        $context = client_configuration::template_context(configuration::normalise(new \stdClass()));
         $data = json_decode($context['config'], true, 512, JSON_THROW_ON_ERROR);
         $this->assertSame(configuration::TOOLS, $data['tools']);
-        $this->assertSame(configuration::storage_scope(), $data['scope']);
+        $this->assertSame(client_configuration::storage_scope(), $data['scope']);
         $this->assertStringNotContainsString('<', $context['config']);
         $this->assertStringNotContainsString('>', $context['config']);
     }

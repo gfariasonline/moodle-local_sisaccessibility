@@ -27,10 +27,10 @@ defined('MOODLE_INTERNAL') || die();
 $observers = [
     [
         'eventname' => '\\core\\event\\user_loggedin',
-        'callback' => '\\local_sisaccessibility\\local\\configuration::reset_scope',
+        'callback' => '\\local_sisaccessibility\\local\\client_configuration::reset_scope',
     ],
     [
         'eventname' => '\\core\\event\\user_loggedout',
-        'callback' => '\\local_sisaccessibility\\local\\configuration::reset_scope',
+        'callback' => '\\local_sisaccessibility\\local\\client_configuration::reset_scope',
     ],
 ];

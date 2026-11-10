@@ -111,7 +111,7 @@ final class hook_callbacks {
         }
         $html = $renderer->render_from_template(
             'local_sisaccessibility/widget',
-            configuration::template_context($config)
+            client_configuration::template_context($config)
         );
         $PAGE->requires->js_call_amd('local_sisaccessibility/init', 'init');
         self::$rendered[$PAGE] = true;
@@ -137,7 +137,7 @@ final class hook_callbacks {
         self::$bootstrapped[$PAGE] = true;
         return $renderer->render_from_template(
             'local_sisaccessibility/bootstrap',
-            configuration::bootstrap_context($config)
+            client_configuration::bootstrap_context($config)
         );
     }
 }

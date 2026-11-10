@@ -147,7 +147,7 @@ final class hook_callbacks_test extends \advanced_testcase {
                 $key = json_decode($context['key'], true, 512, JSON_THROW_ON_ERROR);
                 $tools = json_decode($context['tools'], true, 512, JSON_THROW_ON_ERROR);
                 $colours = json_decode($context['colours'], true, 512, JSON_THROW_ON_ERROR);
-                return $key === \local_sisaccessibility\local\configuration::storage_scope() &&
+                return $key === \local_sisaccessibility\local\client_configuration::storage_scope() &&
                     $tools === \local_sisaccessibility\local\configuration::TOOLS &&
                     $colours === \local_sisaccessibility\local\configuration::COLOURS &&
                     str_contains($context['filters'], 'sis-a11y-deuteranopia');
@@ -185,17 +185,17 @@ final class hook_callbacks_test extends \advanced_testcase {
         $this->setGuestUser();
         $on = $OUTPUT->render_from_template(
             'local_sisaccessibility/bootstrap',
-            \local_sisaccessibility\local\configuration::bootstrap_context(
+            \local_sisaccessibility\local\client_configuration::bootstrap_context(
                 \local_sisaccessibility\local\configuration::normalise((object) ['persist' => '1'])
             )
         );
         $this->assertStringContainsString('<script>', $on);
-        $this->assertStringContainsString(\local_sisaccessibility\local\configuration::storage_scope(), $on);
+        $this->assertStringContainsString(\local_sisaccessibility\local\client_configuration::storage_scope(), $on);
         $this->assertStringContainsString('id="sis-a11y-filters"', $on);
         $this->assertStringNotContainsString('{{', $on);
         $off = $OUTPUT->render_from_template(
             'local_sisaccessibility/bootstrap',
-            \local_sisaccessibility\local\configuration::bootstrap_context(
+            \local_sisaccessibility\local\client_configuration::bootstrap_context(
                 \local_sisaccessibility\local\configuration::normalise((object) ['persist' => '0'])
             )
         );
@@ -203,7 +203,7 @@ final class hook_callbacks_test extends \advanced_testcase {
         $this->assertStringContainsString('id="sis-a11y-filters"', $off, 'the filters are needed even without persistence');
         $none = $OUTPUT->render_from_template(
             'local_sisaccessibility/bootstrap',
-            \local_sisaccessibility\local\configuration::bootstrap_context(
+            \local_sisaccessibility\local\client_configuration::bootstrap_context(
                 \local_sisaccessibility\local\configuration::normalise((object) ['tools' => 'bold'])
             )
         );
